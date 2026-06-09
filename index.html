@@ -3,121 +3,205 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKINLAR KUYUMCULUK</title>
+<title>Akınlar Kuyumculuk</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
+
 body{
-background:radial-gradient(circle at top,#2b2300,#000 45%);
-color:white;
-font-family:Arial,sans-serif;
-overflow:hidden;
-padding:8px;
+  background:#000;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  padding:10px;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top,#332900 0%,#050505 45%,#000 100%);
+  z-index:-1;
 }
 
 .top{
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:6px;
-margin-bottom:8px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:8px;
+  margin-bottom:12px;
 }
 
 .box{
-border:1.5px solid #d4af37;
-padding:7px;
-text-align:center;
-font-weight:bold;
-font-size:16px;
-border-radius:5px;
-background:rgba(0,0,0,.55);
+  border:2px solid #d4af37;
+  border-radius:6px;
+  padding:8px 4px;
+  text-align:center;
+  font-size:16px;
+  font-weight:bold;
+  background:rgba(0,0,0,.6);
 }
 
 .logo{
-position:relative;
-overflow:hidden;
-text-align:center;
-font-size:34px;
-font-weight:900;
-color:#ffd700;
-text-shadow:0 0 12px #ffd700,0 0 25px #9b7b00;
-margin:10px 0 3px;
-white-space:nowrap;
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  color:#ffd700;
+  font-size:34px;
+  font-weight:900;
+  white-space:nowrap;
+  text-shadow:0 0 12px #ffd700,0 0 28px #8a6d00;
+  margin:12px 0 5px;
 }
 
-.logo:after{
-content:"";
-position:absolute;
-top:0;
-left:-70%;
-width:45%;
-height:100%;
-background:linear-gradient(110deg,transparent,rgba(255,255,255,.85),transparent);
-animation:shine 5s infinite;
+.logo::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-60%;
+  width:45%;
+  height:100%;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.9),transparent);
+  animation:shine 5s infinite;
 }
 
 @keyframes shine{
-0%{left:-70%}
-25%{left:120%}
-100%{left:120%}
+  0%{left:-60%}
+  25%{left:120%}
+  100%{left:120%}
 }
 
 .sub{
-text-align:center;
-font-size:13px;
-letter-spacing:4px;
-font-weight:bold;
-margin-bottom:9px;
-color:#eee;
+  text-align:center;
+  font-size:13px;
+  letter-spacing:4px;
+  font-weight:bold;
+  margin-bottom:10px;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-border:1.5px solid #d4af37;
-background:#030303;
+  width:100%;
+  border-collapse:collapse;
+  border:2px solid #d4af37;
+  background:#020202;
 }
 
 th{
-background:linear-gradient(#ffe36a,#caa000);
-color:#000;
-font-size:20px;
-padding:9px;
+  background:linear-gradient(#ffe36a,#caa000);
+  color:#000;
+  font-size:20px;
+  padding:10px 4px;
 }
 
 td{
-border:1px solid rgba(255,215,0,.28);
-padding:8px 10px;
-font-size:17px;
-font-weight:bold;
+  border:1px solid rgba(255,215,0,.28);
+  padding:8px 10px;
+  font-size:17px;
+  font-weight:bold;
 }
 
 td:not(:first-child){
-text-align:center;
+  text-align:center;
 }
 
 .gold{
-color:#ffd700;
+  color:#ffd700;
 }
 
-.white{
-color:#ffffff;
+.footer-space{
+  height:50px;
 }
 
 .footer{
-position:fixed;
-bottom:0;
-left:0;
-width:100%;
-background:#000;
-border-top:2px solid #d4af37;
-color:#ffd700;
-font-weight:bold;
-padding:8px;
-font-size:16px;
-overflow:hidden;
-white-space:nowrap;
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:42px;
+  background:#000;
+  border-top:2px solid #d4af37;
+  color:#ffd700;
+  font-size:16px;
+  font-weight:bold;
+  white-space:nowrap;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
 }
 
 .marquee{
-display:inline-block;
-padding-left:100
+  display:inline-block;
+  padding-left:100%;
+  animation:marquee 18s linear infinite;
+}
+
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="top">
+  <div class="box" id="saat">00:00:00</div>
+  <div class="box" id="tarih">--</div>
+  <div class="box">Son Güncelleme<br>-</div>
+</div>
+
+<div class="logo">AKINLAR KUYUMCULUK</div>
+<div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
+
+<table>
+  <tr>
+    <th>ÜRÜN</th>
+    <th>ALIŞ</th>
+    <th>SATIŞ</th>
+  </tr>
+
+  <tr><td>Has Altın</td><td>-</td><td>-</td></tr>
+  <tr><td>Gram Altın</td><td>-</td><td>-</td></tr>
+  <tr><td>22 Ayar Gram</td><td>-</td><td>-</td></tr>
+
+  <tr><td class="gold">Çeyrek Eski</td><td>-</td><td>-</td></tr>
+  <tr><td>Çeyrek Yeni</td><td>-</td><td>-</td></tr>
+
+  <tr><td class="gold">Yarım Eski</td><td>-</td><td>-</td></tr>
+  <tr><td>Yarım Yeni</td><td>-</td><td>-</td></tr>
+
+  <tr><td class="gold">Tam Eski</td><td>-</td><td>-</td></tr>
+  <tr><td>Tam Yeni</td><td>-</td><td>-</td></tr>
+
+  <tr><td>Dolar</td><td>-</td><td>-</td></tr>
+  <tr><td>Euro</td><td>-</td><td>-</td></tr>
+</table>
+
+<div class="footer-space"></div>
+
+<div class="footer">
+  <div class="marquee">
+    AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • ŞANLIURFA
+  </div>
+</div>
+
+<script>
+function guncelle(){
+  const n = new Date();
+
+  document.getElementById("saat").textContent =
+    n.toLocaleTimeString("tr-TR");
+
+  document.getElementById("tarih").innerHTML =
+    n.toLocaleDateString("tr-TR",{
+      day:"2-digit",
+      month:"long",
+      year:"numeric"
+    });
+}
+
+guncelle();
+setInterval(guncelle,1000);
+</script>
+
+</body>
+</html>
