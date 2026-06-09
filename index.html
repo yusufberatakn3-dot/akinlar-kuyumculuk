@@ -6,263 +6,178 @@
 <title>Akınlar Kuyumculuk</title>
 
 <style>
-*{box-sizing:border-box}
-
-html,body{
-  margin:0;
-  width:100%;
-  height:100%;
-  background:#000;
-  color:white;
-  font-family:Arial, sans-serif;
-  overflow:hidden;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 body{
-  background:radial-gradient(circle at top,#322900 0%,#050505 35%,#000 100%);
+background:#000;
+color:white;
+font-family:Arial,sans-serif;
+overflow:hidden;
 }
 
-.screen{
-  width:100vw;
-  height:100vh;
-  padding:12px 16px 52px;
+.header{
+padding:10px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:5px;
 }
 
-.topbar{
-  height:54px;
-  border:1px solid #bfa000;
-  border-radius:8px;
-  display:grid;
-  grid-template-columns:1fr 1.25fr 1fr;
-  background:#050505;
-  overflow:hidden;
+.box{
+border:2px solid #d4af37;
+padding:8px;
+text-align:center;
+font-weight:bold;
 }
 
-.topbox{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  border-right:1px solid #756000;
-  font-size:17px;
-  font-weight:800;
-  text-align:center;
-}
-
-.topbox:last-child{border-right:none}
-.gold{color:#ffd400}
-.small{font-size:12px;color:#ddd}
-
-.brand{
-  margin:18px auto 6px;
-  text-align:center;
-  font-family:Georgia,serif;
-  font-size:clamp(30px,7vw,60px);
-  font-weight:900;
-  color:#ffd400;
-  white-space:nowrap;
-  text-shadow:0 0 10px #fff2a0,0 0 25px #8a7000;
-  position:relative;
-  overflow:hidden;
-  width:max-content;
-  max-width:100%;
-}
-
-.brand:after{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-70%;
-  width:45%;
-  height:100%;
-  background:linear-gradient(110deg,transparent,rgba(255,255,255,.9),transparent);
-  animation:shine 6s infinite;
-}
-
-@keyframes shine{
-  0%{left:-70%}
-  20%{left:120%}
-  100%{left:120%}
+.logo{
+text-align:center;
+font-size:48px;
+font-weight:bold;
+color:#ffd700;
+text-shadow:0 0 15px #ffd700;
+margin-top:10px;
 }
 
 .sub{
-  text-align:center;
-  font-size:clamp(13px,3vw,22px);
-  letter-spacing:5px;
-  font-weight:900;
-  margin-bottom:12px;
+text-align:center;
+letter-spacing:5px;
+margin-bottom:20px;
 }
 
-.table{
-  height:calc(100vh - 210px);
-  border:2px solid #ffd400;
-  border-radius:16px;
-  overflow:hidden;
-  background:#030303;
+table{
+width:95%;
+margin:auto;
+border-collapse:collapse;
 }
 
-.head,.row{
-  display:grid;
-  grid-template-columns:1.25fr 1fr 1fr;
+th{
+background:#d4af37;
+color:black;
+font-size:28px;
+padding:12px;
 }
 
-.head{
-  height:48px;
-  background:linear-gradient(#ffe56a,#d3a400);
-  color:#000;
-  font-size:clamp(20px,4vw,32px);
-  font-weight:900;
+td{
+border:1px solid rgba(255,215,0,.3);
+padding:14px;
+font-size:22px;
+font-weight:bold;
+text-align:center;
 }
 
-.head div,.row div{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-right:1px solid rgba(255,212,0,.30);
+td:first-child{
+text-align:left;
+padding-left:25px;
 }
 
-.head div:last-child,.row div:last-child{border-right:none}
-
-.rows{
-  height:calc(100% - 48px);
-  display:grid;
-  grid-template-rows:repeat(11,1fr);
+.old{
+color:#ffd700;
 }
 
-.row{
-  border-top:1px solid rgba(255,212,0,.28);
-  font-size:clamp(15px,3.3vw,25px);
-  font-weight:900;
+.new{
+color:#3b82f6;
 }
-
-.product{
-  justify-content:flex-start!important;
-  padding-left:16px;
-}
-
-.old{color:#ffd400}
-.new{color:#2f8cff}
-.sell{color:#ffd400}
 
 .ticker{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  height:44px;
-  background:#030303;
-  border-top:2px solid #ffd400;
-  color:#ffd400;
-  display:flex;
-  align-items:center;
-  overflow:hidden;
-  font-size:clamp(15px,3vw,22px);
-  font-weight:900;
-  white-space:nowrap;
-}
-
-.ticker-icon{
-  width:58px;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-right:1px solid #806900;
-  flex:none;
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:black;
+border-top:2px solid #d4af37;
+color:#ffd700;
+padding:10px;
+font-size:20px;
+font-weight:bold;
+white-space:nowrap;
+overflow:hidden;
 }
 
 .marquee{
-  display:inline-block;
-  padding-left:100%;
-  animation:marquee 17s linear infinite;
+display:inline-block;
+padding-left:100%;
+animation:kay 20s linear infinite;
 }
 
-@keyframes marquee{
-  from{transform:translateX(0)}
-  to{transform:translateX(-100%)}
+@keyframes kay{
+0%{transform:translateX(0)}
+100%{transform:translateX(-100%)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="screen">
-
-  <div class="topbar">
-    <div class="topbox">
-      <span class="gold">◷</span>
-      <span id="clock">--:--:--</span>
-    </div>
-
-    <div class="topbox">
-      <span class="gold">▣</span>
-      <div>
-        <div id="date">--</div>
-        <div class="small" id="day">--</div>
-      </div>
-    </div>
-
-    <div class="topbox">
-      <span class="gold">↻</span>
-      <div>
-        <div class="gold">Son Güncelleme</div>
-        <div class="small">-</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="brand">AKINLAR KUYUMCULUK</div>
-  <div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
-
-  <div class="table">
-    <div class="head">
-      <div>ÜRÜN</div>
-      <div>ALIŞ</div>
-      <div>SATIŞ</div>
-    </div>
-
-    <div class="rows">
-      <div class="row"><div class="product">Has Altın</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product">Gram Altın</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product">22 Ayar Gram</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product old">Çeyrek Eski</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product new">Çeyrek Yeni</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product old">Yarım Eski</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product new">Yarım Yeni</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product old">Tam Eski</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product new">Tam Yeni</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product">Dolar</div><div>-</div><div class="sell">-</div></div>
-      <div class="row"><div class="product">Euro</div><div>-</div><div class="sell">-</div></div>
-    </div>
-  </div>
-
+<div class="header">
+<div class="box" id="clock"></div>
+<div class="box" id="date"></div>
+<div class="box">
+Son Güncelleme
+<br>
+-
+</div>
 </div>
 
+<div class="logo">
+AKINLAR KUYUMCULUK
+</div>
+
+<div class="sub">
+ALTIN & DÖVİZ FİYATLARI
+</div>
+
+<table>
+<tr>
+<th>ÜRÜN</th>
+<th>ALIŞ</th>
+<th>SATIŞ</th>
+</tr>
+
+<tr><td>Has Altın</td><td>-</td><td>-</td></tr>
+<tr><td>Gram Altın</td><td>-</td><td>-</td></tr>
+<tr><td>22 Ayar Gram</td><td>-</td><td>-</td></tr>
+
+<tr><td class="old">Çeyrek Eski</td><td>-</td><td>-</td></tr>
+<tr><td class="new">Çeyrek Yeni</td><td>-</td><td>-</td></tr>
+
+<tr><td class="old">Yarım Eski</td><td>-</td><td>-</td></tr>
+<tr><td class="new">Yarım Yeni</td><td>-</td><td>-</td></tr>
+
+<tr><td class="old">Tam Eski</td><td>-</td><td>-</td></tr>
+<tr><td class="new">Tam Yeni</td><td>-</td><td>-</td></tr>
+
+<tr><td>Dolar</td><td>-</td><td>-</td></tr>
+<tr><td>Euro</td><td>-</td><td>-</td></tr>
+
+</table>
+
 <div class="ticker">
-  <div class="ticker-icon">📢</div>
-  <div class="marquee">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR •</div>
+<div class="marquee">
+AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI • ŞANLIURFA
+</div>
 </div>
 
 <script>
-function updateTime(){
-  const now = new Date();
+function updateClock(){
+const now=new Date();
 
-  document.getElementById("clock").textContent =
-    now.toLocaleTimeString("tr-TR");
+document.getElementById("clock").innerHTML=
+now.toLocaleTimeString("tr-TR");
 
-  document.getElementById("date").textContent =
-    now.toLocaleDateString("tr-TR",{
-      day:"2-digit",
-      month:"long",
-      year:"numeric"
-    });
-
-  document.getElementById("day").textContent =
-    now.toLocaleDateString("tr-TR",{weekday:"long"});
+document.getElementById("date").innerHTML=
+now.toLocaleDateString("tr-TR",{
+day:"2-digit",
+month:"long",
+year:"numeric"
+});
 }
 
-updateTime();
-setInterval(updateTime,1000);
+setInterval(updateClock,1000);
+updateClock();
 </script>
 
 </body>
