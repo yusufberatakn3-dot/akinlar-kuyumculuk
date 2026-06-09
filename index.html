@@ -193,39 +193,62 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-const products = [
-  "hasAltin",
-  "gramAltin",
-  "ayar22",
-  "ceyrekEski",
-  "ceyrekYeni",
-  "yarimEski",
-  "yarimYeni",
-  "tamEski",
-  "tamYeni",
-  "dolar",
-  "euro"
-];
+let karlar = {};
 
-onValue(ref(db,"fiyatlar"), snap=>{
-  const data = snap.val() || {};
-  products.forEach(key=>{
-    if(data[key]){
-      const alis = document.getElementById(key+"Alis");
-      const satis = document.getElementById(key+"Satis");
-      if(alis) alis.textContent = data[key].alis || "-";
-      if(satis) satis.textContent = data[key].satis || "-";
-    }
+function sayi(v){
+  return Number(String(v || "0").replace(/\./g,"").replace(",","."));
+}
+
+function yaz(id, deger){
+  const el = document.getElementById(id);
+  if(el) el.textContent = Math.round(deger).toLocaleString("tr-TR");
+}
+
+function kar(key, tip){
+  return sayi(karlar?.[key]?.[tip] || 0);
+}
+
+async function canliYukle(){
+  const r = await fetch("/api/prices");
+  const d = await r.json();
+
+  const eslesme = {
+    hasAltin: "gram-altin",
+    gramAltin: "gram-altin",
+    ayar22: "22-ayar-bilezik",
+    ceyrekEski: "ceyrek-altin",
+    ceyrekYeni: "ceyrek-altin",
+    yarimEski: "yarim-altin",
+    yarimYeni: "yarim-altin",
+    tamEski: "tam-altin",
+    tamYeni: "tam-altin",
+    dolar: "USD",
+    euro: "EUR"
+  };
+
+  Object.keys(eslesme).forEach(key=>{
+    const item = d[eslesme[key]];
+    if(!item) return;
+
+    const alis = sayi(item["Alış"]);
+    const satis = sayi(item["Satış"]);
+
+    yaz(key+"Alis", alis + kar(key,"alis"));
+    yaz(key+"Satis", satis + kar(key,"satis"));
   });
+
+  document.getElementById("sonGuncelleme").innerHTML =
+    new Date().toLocaleString("tr-TR");
+}
+
+onValue(ref(db,"karlar"), snap=>{
+  karlar = snap.val() || {};
+  canliYukle();
 });
 
-onValue(ref(db,"sonGuncelleme"), snap=>{
-  const val = snap.val();
-  if(val){
-    document.getElementById("sonGuncelleme").textContent = val;
-  }
-});
-</script>
+canliYukle();
+setInterval(canliYukle,60000);
+  </script>
 
 <script>
 function guncelle(){
