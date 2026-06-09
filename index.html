@@ -103,13 +103,9 @@ td:not(:first-child){
   text-align:center;
 }
 
-.gold{
-  color:#ffd700;
-}
+.gold{color:#ffd700}
 
-.footer-space{
-  height:50px;
-}
+.footer-space{height:50px}
 
 .footer{
   position:fixed;
@@ -146,34 +142,30 @@ td:not(:first-child){
 <div class="top">
   <div class="box" id="saat">00:00:00</div>
   <div class="box" id="tarih">--</div>
-  <div class="box">Son Güncelleme<br>-</div>
+  <div class="box">Son Güncelleme<br><span id="sonGuncelleme">-</span></div>
 </div>
 
 <div class="logo">AKINLAR KUYUMCULUK</div>
 <div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
 
 <table>
-  <tr>
-    <th>ÜRÜN</th>
-    <th>ALIŞ</th>
-    <th>SATIŞ</th>
-  </tr>
+  <tr><th>ÜRÜN</th><th>ALIŞ</th><th>SATIŞ</th></tr>
 
-  <tr><td>Has Altın</td><td>-</td><td>-</td></tr>
-  <tr><td>Gram Altın</td><td>-</td><td>-</td></tr>
-  <tr><td>22 Ayar Gram</td><td>-</td><td>-</td></tr>
+  <tr><td>Has Altın</td><td id="hasAltinAlis">-</td><td id="hasAltinSatis">-</td></tr>
+  <tr><td>Gram Altın</td><td id="gramAltinAlis">-</td><td id="gramAltinSatis">-</td></tr>
+  <tr><td>22 Ayar Gram</td><td id="ayar22Alis">-</td><td id="ayar22Satis">-</td></tr>
 
-  <tr><td class="gold">Çeyrek Eski</td><td>-</td><td>-</td></tr>
-  <tr><td>Çeyrek Yeni</td><td>-</td><td>-</td></tr>
+  <tr><td class="gold">Çeyrek Eski</td><td id="ceyrekEskiAlis">-</td><td id="ceyrekEskiSatis">-</td></tr>
+  <tr><td>Çeyrek Yeni</td><td id="ceyrekYeniAlis">-</td><td id="ceyrekYeniSatis">-</td></tr>
 
-  <tr><td class="gold">Yarım Eski</td><td>-</td><td>-</td></tr>
-  <tr><td>Yarım Yeni</td><td>-</td><td>-</td></tr>
+  <tr><td class="gold">Yarım Eski</td><td id="yarimEskiAlis">-</td><td id="yarimEskiSatis">-</td></tr>
+  <tr><td>Yarım Yeni</td><td id="yarimYeniAlis">-</td><td id="yarimYeniSatis">-</td></tr>
 
-  <tr><td class="gold">Tam Eski</td><td>-</td><td>-</td></tr>
-  <tr><td>Tam Yeni</td><td>-</td><td>-</td></tr>
+  <tr><td class="gold">Tam Eski</td><td id="tamEskiAlis">-</td><td id="tamEskiSatis">-</td></tr>
+  <tr><td>Tam Yeni</td><td id="tamYeniAlis">-</td><td id="tamYeniSatis">-</td></tr>
 
-  <tr><td>Dolar</td><td>-</td><td>-</td></tr>
-  <tr><td>Euro</td><td>-</td><td>-</td></tr>
+  <tr><td>Dolar</td><td id="dolarAlis">-</td><td id="dolarSatis">-</td></tr>
+  <tr><td>Euro</td><td id="euroAlis">-</td><td id="euroSatis">-</td></tr>
 </table>
 
 <div class="footer-space"></div>
@@ -183,6 +175,57 @@ td:not(:first-child){
     AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • ŞANLIURFA
   </div>
 </div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD3qdvibbWYv_8QfTr2QCfqrn0cPFj2xKw",
+  authDomain: "akinlar-kuyumculuk.firebaseapp.com",
+  databaseURL: "https://akinlar-kuyumculuk-default-rtdb.firebaseio.com",
+  projectId: "akinlar-kuyumculuk",
+  storageBucket: "akinlar-kuyumculuk.firebasestorage.app",
+  messagingSenderId: "615116794335",
+  appId: "1:615116794335:web:f6928756d3a38b1e6dfc6a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const products = [
+  "hasAltin",
+  "gramAltin",
+  "ayar22",
+  "ceyrekEski",
+  "ceyrekYeni",
+  "yarimEski",
+  "yarimYeni",
+  "tamEski",
+  "tamYeni",
+  "dolar",
+  "euro"
+];
+
+onValue(ref(db,"fiyatlar"), snap=>{
+  const data = snap.val() || {};
+  products.forEach(key=>{
+    if(data[key]){
+      const alis = document.getElementById(key+"Alis");
+      const satis = document.getElementById(key+"Satis");
+      if(alis) alis.textContent = data[key].alis || "-";
+      if(satis) satis.textContent = data[key].satis || "-";
+    }
+  });
+});
+
+onValue(ref(db,"sonGuncelleme"), snap=>{
+  const val = snap.val();
+  if(val){
+    document.getElementById("sonGuncelleme").textContent = val;
+  }
+});
+</script>
 
 <script>
 function guncelle(){
