@@ -7,76 +7,86 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
 body{
-background:#000;
-color:#fff;
+background:radial-gradient(circle at top,#2b2300,#000 45%);
+color:white;
 font-family:Arial,sans-serif;
-padding:10px;
+overflow:hidden;
+padding:8px;
 }
 
 .top{
 display:grid;
 grid-template-columns:1fr 1fr 1fr;
-gap:8px;
-margin-bottom:15px;
+gap:6px;
+margin-bottom:8px;
 }
-
 .box{
-border:2px solid #d4af37;
-padding:12px;
+border:1.5px solid #d4af37;
+padding:7px;
 text-align:center;
 font-weight:bold;
-font-size:22px;
+font-size:16px;
+border-radius:5px;
 }
 
 .logo{
+position:relative;
+overflow:hidden;
 text-align:center;
-font-size:54px;
-font-weight:bold;
+font-size:34px;
+font-weight:900;
 color:#ffd700;
-text-shadow:0 0 20px #ffd700;
-margin:20px 0 5px;
+text-shadow:0 0 12px #ffd700,0 0 25px #9b7b00;
+margin:10px 0 3px;
+white-space:nowrap;
+}
+.logo:after{
+content:"";
+position:absolute;
+top:0;
+left:-70%;
+width:45%;
+height:100%;
+background:linear-gradient(110deg,transparent,rgba(255,255,255,.9),transparent);
+animation:shine 5s infinite;
+}
+@keyframes shine{
+0%{left:-70%}
+25%{left:120%}
+100%{left:120%}
 }
 
 .sub{
 text-align:center;
-font-size:18px;
-letter-spacing:6px;
-margin-bottom:20px;
+font-size:13px;
+letter-spacing:4px;
+font-weight:bold;
+margin-bottom:9px;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
+border:1.5px solid #d4af37;
 }
-
 th{
-background:#d4af37;
+background:linear-gradient(#ffe36a,#caa000);
 color:#000;
-font-size:22px;
-padding:15px;
-}
-
-td{
-border:1px solid #444;
-padding:16px;
 font-size:20px;
+padding:9px;
 }
-
-tr:nth-child(even){
-background:#050505;
-}
-
-.old{
-color:#ffd700;
+td{
+border:1px solid rgba(255,215,0,.28);
+padding:8px 10px;
+font-size:17px;
 font-weight:bold;
 }
-
-.new{
-color:#3b82f6;
-font-weight:bold;
+td:not(:first-child){
+text-align:center;
 }
+.old{color:#ffd700}
+.new{color:#4f91ff}
 
 .footer{
 position:fixed;
@@ -87,17 +97,16 @@ background:#000;
 border-top:2px solid #d4af37;
 color:#ffd700;
 font-weight:bold;
-padding:10px;
+padding:8px;
+font-size:16px;
 overflow:hidden;
 white-space:nowrap;
 }
-
 .marquee{
 display:inline-block;
 padding-left:100%;
-animation:kaydir 20s linear infinite;
+animation:kaydir 18s linear infinite;
 }
-
 @keyframes kaydir{
 0%{transform:translateX(0)}
 100%{transform:translateX(-100%)}
@@ -109,7 +118,7 @@ animation:kaydir 20s linear infinite;
 
 <div class="top">
 <div class="box" id="saat">00:00:00</div>
-<div class="box">09 Haziran 2026</div>
+<div class="box" id="tarih">--</div>
 <div class="box">Son Güncelleme<br>-</div>
 </div>
 
@@ -117,45 +126,34 @@ animation:kaydir 20s linear infinite;
 <div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
 
 <table>
-<tr>
-<th>ÜRÜN</th>
-<th>ALIŞ</th>
-<th>SATIŞ</th>
-</tr>
-
+<tr><th>ÜRÜN</th><th>ALIŞ</th><th>SATIŞ</th></tr>
 <tr><td>Has Altın</td><td>-</td><td>-</td></tr>
 <tr><td>Gram Altın</td><td>-</td><td>-</td></tr>
 <tr><td>22 Ayar Gram</td><td>-</td><td>-</td></tr>
-
 <tr><td class="old">Çeyrek Eski</td><td>-</td><td>-</td></tr>
 <tr><td class="new">Çeyrek Yeni</td><td>-</td><td>-</td></tr>
-
 <tr><td class="old">Yarım Eski</td><td>-</td><td>-</td></tr>
 <tr><td class="new">Yarım Yeni</td><td>-</td><td>-</td></tr>
-
 <tr><td class="old">Tam Eski</td><td>-</td><td>-</td></tr>
 <tr><td class="new">Tam Yeni</td><td>-</td><td>-</td></tr>
-
 <tr><td>Dolar</td><td>-</td><td>-</td></tr>
 <tr><td>Euro</td><td>-</td><td>-</td></tr>
 </table>
 
-<div style="height:60px"></div>
-
 <div class="footer">
-<div class="marquee">
-AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI • ŞANLIURFA
-</div>
+<div class="marquee">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • ŞANLIURFA</div>
 </div>
 
 <script>
-function saatGuncelle(){
-const now=new Date();
-document.getElementById("saat").innerHTML=
-now.toLocaleTimeString("tr-TR");
+function guncelle(){
+const n=new Date();
+document.getElementById("saat").innerHTML=n.toLocaleTimeString("tr-TR");
+document.getElementById("tarih").innerHTML=n.toLocaleDateString("tr-TR",{
+day:"2-digit",month:"long",year:"numeric"
+});
 }
-setInterval(saatGuncelle,1000);
-saatGuncelle();
+setInterval(guncelle,1000);
+guncelle();
 </script>
 
 </body>
