@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Canlı Fiyat Testi</title>
+</head>
+<body style="background:black;color:gold;font-size:30px;text-align:center;padding-top:50px">
+
+<h1>Canlı Fiyat Test</h1>
+
+<div id="sonuc">Yükleniyor...</div>
+
+<script>
+fetch("https://api.genelpara.com/embed/altin.json")
+.then(r=>r.json())
+.then(data=>{
+document.getElementById("sonuc").innerHTML =
+"Gram Altın: " + data.GA.satis;
+})
+.catch(()=>{
+document.getElementById("sonuc").innerHTML =
+"Veri alınamadı";
+});
+</script>
+
+</body>
+</html>
