@@ -21,6 +21,7 @@ grid-template-columns:1fr 1fr 1fr;
 gap:6px;
 margin-bottom:8px;
 }
+
 .box{
 border:1.5px solid #d4af37;
 padding:7px;
@@ -28,6 +29,7 @@ text-align:center;
 font-weight:bold;
 font-size:16px;
 border-radius:5px;
+background:rgba(0,0,0,.55);
 }
 
 .logo{
@@ -41,6 +43,7 @@ text-shadow:0 0 12px #ffd700,0 0 25px #9b7b00;
 margin:10px 0 3px;
 white-space:nowrap;
 }
+
 .logo:after{
 content:"";
 position:absolute;
@@ -48,9 +51,10 @@ top:0;
 left:-70%;
 width:45%;
 height:100%;
-background:linear-gradient(110deg,transparent,rgba(255,255,255,.9),transparent);
+background:linear-gradient(110deg,transparent,rgba(255,255,255,.85),transparent);
 animation:shine 5s infinite;
 }
+
 @keyframes shine{
 0%{left:-70%}
 25%{left:120%}
@@ -63,30 +67,41 @@ font-size:13px;
 letter-spacing:4px;
 font-weight:bold;
 margin-bottom:9px;
+color:#eee;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
 border:1.5px solid #d4af37;
+background:#030303;
 }
+
 th{
 background:linear-gradient(#ffe36a,#caa000);
 color:#000;
 font-size:20px;
 padding:9px;
 }
+
 td{
 border:1px solid rgba(255,215,0,.28);
 padding:8px 10px;
 font-size:17px;
 font-weight:bold;
 }
+
 td:not(:first-child){
 text-align:center;
 }
-.old{color:#ffd700}
-.new{color:#4f91ff}
+
+.gold{
+color:#ffd700;
+}
+
+.white{
+color:#ffffff;
+}
 
 .footer{
 position:fixed;
@@ -102,59 +117,7 @@ font-size:16px;
 overflow:hidden;
 white-space:nowrap;
 }
+
 .marquee{
 display:inline-block;
-padding-left:100%;
-animation:kaydir 18s linear infinite;
-}
-@keyframes kaydir{
-0%{transform:translateX(0)}
-100%{transform:translateX(-100%)}
-}
-</style>
-</head>
-
-<body>
-
-<div class="top">
-<div class="box" id="saat">00:00:00</div>
-<div class="box" id="tarih">--</div>
-<div class="box">Son Güncelleme<br>-</div>
-</div>
-
-<div class="logo">AKINLAR KUYUMCULUK</div>
-<div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
-
-<table>
-<tr><th>ÜRÜN</th><th>ALIŞ</th><th>SATIŞ</th></tr>
-<tr><td>Has Altın</td><td>-</td><td>-</td></tr>
-<tr><td>Gram Altın</td><td>-</td><td>-</td></tr>
-<tr><td>22 Ayar Gram</td><td>-</td><td>-</td></tr>
-<tr><td class="old">Çeyrek Eski</td><td>-</td><td>-</td></tr>
-<tr><td class="new">Çeyrek Yeni</td><td>-</td><td>-</td></tr>
-<tr><td class="old">Yarım Eski</td><td>-</td><td>-</td></tr>
-<tr><td class="new">Yarım Yeni</td><td>-</td><td>-</td></tr>
-<tr><td class="old">Tam Eski</td><td>-</td><td>-</td></tr>
-<tr><td class="new">Tam Yeni</td><td>-</td><td>-</td></tr>
-<tr><td>Dolar</td><td>-</td><td>-</td></tr>
-<tr><td>Euro</td><td>-</td><td>-</td></tr>
-</table>
-
-<div class="footer">
-<div class="marquee">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • ŞANLIURFA</div>
-</div>
-
-<script>
-function guncelle(){
-const n=new Date();
-document.getElementById("saat").innerHTML=n.toLocaleTimeString("tr-TR");
-document.getElementById("tarih").innerHTML=n.toLocaleDateString("tr-TR",{
-day:"2-digit",month:"long",year:"numeric"
-});
-}
-setInterval(guncelle,1000);
-guncelle();
-</script>
-
-</body>
-</html>
+padding-left:100
