@@ -1,11 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-<title>Admin Panel</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akınlar Kuyumculuk Admin</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:#000;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  padding:15px;
+}
+
+h1{
+  color:#ffd700;
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.login,.panel{
+  max-width:600px;
+  margin:auto;
+}
+
+input{
+  width:100%;
+  padding:12px;
+  margin:6px 0;
+  font-size:18px;
+  border:1px solid #d4af37;
+  border-radius:6px;
+  background:#111;
+  color:#fff;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  background:#d4af37;
+  color:#000;
+  border:0;
+  border-radius:8px;
+  font-size:18px;
+  font-weight:bold;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1.3fr 1fr 1fr;
+  gap:6px;
+  margin-bottom:8px;
+  align-items:center;
+}
+
+.label{
+  font-weight:bold;
+  color:#ffd700;
+}
+
+.panel{
+  display:none;
+}
+</style>
 </head>
+
 <body>
 
-<h1>Akınlar Kuyumculuk Admin Paneli</h1>
+<div class="login" id="login">
+  <h1>Yönetici Girişi</h1>
+  <input id="password" type="password" placeholder="Şifre">
+  <button onclick="login()">Giriş Yap</button>
+</div>
+
+<div class="panel" id="panel">
+  <h1>Fiyat Yönetimi</h1>
+  <div id="inputs"></div>
+  <button onclick="savePrices()">Fiyatları Kaydet</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD3qdvibbWYv_8QfTr2QCfqrn0cPFj2xKw",
+  authDomain: "akinlar-kuyumculuk.firebaseapp.com",
+  databaseURL: "https://akinlar-kuyumculuk-default-rtdb.firebaseio.com",
+  projectId: "akinlar-kuyumculuk",
+  storageBucket: "akinlar-kuyumculuk.firebasestorage.app",
+  messagingSenderId: "615116794335",
+  appId: "1:615116794335:web:f6928756d3a38b1e6dfc6a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const products = [
+  ["hasAltin","Has Altın"],
+  ["gramAltin","Gram Altın"],
+  ["ayar22","22 Ayar Gram"],
+  ["ceyrekEski","Çeyrek Eski"],
+  ["ceyrekYeni","Çeyrek Yeni"],
+  ["yarimEski","Yarım Eski"],
+  ["yarimYeni","Yarım Yeni"],
+  ["tamEski","Tam Eski"],
+  ["tamYeni","Tam Yeni"],
+  ["dolar","Dolar"],
+  ["euro","Euro"]
+];
+
+window.login = function(){
+  const pass = document.getElementById("password").value;
+  if(pass === "1234"){
+    document.getElementById("login").style.display="none";
+    document.getElementById("panel").style.display="block";
+    buildInputs();
+  }else{
+    alert("Şifre yanlış");
+  }
+};
+
+function buildInputs(){
+  const area = document.getElementById("inputs");
+  area.innerHTML = "";
+
+  products.forEach(([key,name])=>{
+    area.innerHTML += `
+      <div class="row">
+        <div class="label">${name}</div>
+        <input id="${key}Alis" placeholder="Alış">
+        <input id="${key}Satis" placeholder="Satış">
+      </div>
+    `;
+  });
+
+  onValue(ref(db,"fiyatlar"), snap=>{
+    const data = snap.val() || {};
+    products.forEach(([key])=>{
+      if(data[key]){
+        document.getElementById(key+"Alis").value = data[key].alis || "";
+        document.getElementById(key+"Satis").value = data[key].satis || "";
+      }
+    });
+  });
+}
+
+window.savePrices = function(){
+  const data = {};
+
+  products.forEach(([key])=>{
+    data[key] = {
+      alis: document.getElementById(key+"Alis").value || "-",
+      satis: document.getElementById(key+"Satis").value || "-"
+    };
+  });
+
+  const now = new Date().toLocaleString("tr-TR");
+
+  set(ref(db,"fiyatlar"), data);
+  set(ref(db,"sonGuncelleme"), now);
+
+  alert("Fiyatlar kaydedildi");
+};
+</script>
 
 </body>
 </html>
