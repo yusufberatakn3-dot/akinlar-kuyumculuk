@@ -6,108 +6,264 @@
 <title>Akınlar Kuyumculuk</title>
 
 <style>
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  color:white;
+  font-family:Arial, sans-serif;
+  overflow:hidden;
+}
+
 body{
-margin:0;
-background:#000;
-font-family:Arial,sans-serif;
-color:white;
+  background:radial-gradient(circle at top,#322900 0%,#050505 35%,#000 100%);
 }
 
-.header{
-text-align:center;
-padding:20px;
+.screen{
+  width:100vw;
+  height:100vh;
+  padding:12px 16px 52px;
 }
 
-.logo{
-font-size:42px;
-font-weight:bold;
-color:#ffd700;
-text-shadow:0 0 20px #ffd700;
+.topbar{
+  height:54px;
+  border:1px solid #bfa000;
+  border-radius:8px;
+  display:grid;
+  grid-template-columns:1fr 1.25fr 1fr;
+  background:#050505;
+  overflow:hidden;
+}
+
+.topbox{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  border-right:1px solid #756000;
+  font-size:17px;
+  font-weight:800;
+  text-align:center;
+}
+
+.topbox:last-child{border-right:none}
+.gold{color:#ffd400}
+.small{font-size:12px;color:#ddd}
+
+.brand{
+  margin:18px auto 6px;
+  text-align:center;
+  font-family:Georgia,serif;
+  font-size:clamp(30px,7vw,60px);
+  font-weight:900;
+  color:#ffd400;
+  white-space:nowrap;
+  text-shadow:0 0 10px #fff2a0,0 0 25px #8a7000;
+  position:relative;
+  overflow:hidden;
+  width:max-content;
+  max-width:100%;
+}
+
+.brand:after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-70%;
+  width:45%;
+  height:100%;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.9),transparent);
+  animation:shine 6s infinite;
+}
+
+@keyframes shine{
+  0%{left:-70%}
+  20%{left:120%}
+  100%{left:120%}
 }
 
 .sub{
-font-size:18px;
-letter-spacing:4px;
-margin-top:10px;
+  text-align:center;
+  font-size:clamp(13px,3vw,22px);
+  letter-spacing:5px;
+  font-weight:900;
+  margin-bottom:12px;
 }
 
 .table{
-width:95%;
-margin:auto;
-border:2px solid #d4af37;
-border-radius:20px;
-overflow:hidden;
+  height:calc(100vh - 210px);
+  border:2px solid #ffd400;
+  border-radius:16px;
+  overflow:hidden;
+  background:#030303;
+}
+
+.head,.row{
+  display:grid;
+  grid-template-columns:1.25fr 1fr 1fr;
 }
 
 .head{
-display:grid;
-grid-template-columns:2fr 1fr 1fr;
-background:#d4af37;
-color:#000;
-font-weight:bold;
-font-size:28px;
+  height:48px;
+  background:linear-gradient(#ffe56a,#d3a400);
+  color:#000;
+  font-size:clamp(20px,4vw,32px);
+  font-weight:900;
 }
 
-.head div{
-padding:15px;
-text-align:center;
+.head div,.row div{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-right:1px solid rgba(255,212,0,.30);
+}
+
+.head div:last-child,.row div:last-child{border-right:none}
+
+.rows{
+  height:calc(100% - 48px);
+  display:grid;
+  grid-template-rows:repeat(11,1fr);
 }
 
 .row{
-display:grid;
-grid-template-columns:2fr 1fr 1fr;
-border-top:1px solid #333;
+  border-top:1px solid rgba(255,212,0,.28);
+  font-size:clamp(15px,3.3vw,25px);
+  font-weight:900;
 }
 
-.row div{
-padding:18px;
-font-size:24px;
+.product{
+  justify-content:flex-start!important;
+  padding-left:16px;
 }
 
-.buy,.sell{
-text-align:center;
+.old{color:#ffd400}
+.new{color:#2f8cff}
+.sell{color:#ffd400}
+
+.ticker{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:44px;
+  background:#030303;
+  border-top:2px solid #ffd400;
+  color:#ffd400;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  font-size:clamp(15px,3vw,22px);
+  font-weight:900;
+  white-space:nowrap;
 }
 
-.old{
-color:#ffd700;
-font-weight:bold;
+.ticker-icon{
+  width:58px;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-right:1px solid #806900;
+  flex:none;
 }
 
-.new{
-color:#4a8cff;
-font-weight:bold;
+.marquee{
+  display:inline-block;
+  padding-left:100%;
+  animation:marquee 17s linear infinite;
+}
+
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<div class="logo">AKINLAR KUYUMCULUK</div>
-<div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
+<div class="screen">
+
+  <div class="topbar">
+    <div class="topbox">
+      <span class="gold">◷</span>
+      <span id="clock">--:--:--</span>
+    </div>
+
+    <div class="topbox">
+      <span class="gold">▣</span>
+      <div>
+        <div id="date">--</div>
+        <div class="small" id="day">--</div>
+      </div>
+    </div>
+
+    <div class="topbox">
+      <span class="gold">↻</span>
+      <div>
+        <div class="gold">Son Güncelleme</div>
+        <div class="small">-</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="brand">AKINLAR KUYUMCULUK</div>
+  <div class="sub">ALTIN & DÖVİZ FİYATLARI</div>
+
+  <div class="table">
+    <div class="head">
+      <div>ÜRÜN</div>
+      <div>ALIŞ</div>
+      <div>SATIŞ</div>
+    </div>
+
+    <div class="rows">
+      <div class="row"><div class="product">Has Altın</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product">Gram Altın</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product">22 Ayar Gram</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product old">Çeyrek Eski</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product new">Çeyrek Yeni</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product old">Yarım Eski</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product new">Yarım Yeni</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product old">Tam Eski</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product new">Tam Yeni</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product">Dolar</div><div>-</div><div class="sell">-</div></div>
+      <div class="row"><div class="product">Euro</div><div>-</div><div class="sell">-</div></div>
+    </div>
+  </div>
+
 </div>
 
-<div class="table">
-
-<div class="head">
-<div>ÜRÜN</div>
-<div>ALIŞ</div>
-<div>SATIŞ</div>
+<div class="ticker">
+  <div class="ticker-icon">📢</div>
+  <div class="marquee">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR •</div>
 </div>
 
-<div class="row"><div>Has Altın</div><div class="buy">-</div><div class="sell">-</div></div>
-<div class="row"><div>Gram Altın</div><div class="buy">-</div><div class="sell">-</div></div>
-<div class="row"><div>22 Ayar Gram</div><div class="buy">-</div><div class="sell">-</div></div>
-<div class="row"><div class="old">Çeyrek Eski</div><div>-</div><div>-</div></div>
-<div class="row"><div class="new">Çeyrek Yeni</div><div>-</div><div>-</div></div>
-<div class="row"><div class="old">Yarım Eski</div><div>-</div><div>-</div></div>
-<div class="row"><div class="new">Yarım Yeni</div><div>-</div><div>-</div></div>
-<div class="row"><div class="old">Tam Eski</div><div>-</div><div>-</div></div>
-<div class="row"><div class="new">Tam Yeni</div><div>-</div><div>-</div></div>
-<div class="row"><div>Dolar</div><div>-</div><div>-</div></div>
-<div class="row"><div>Euro</div><div>-</div><div>-</div></div>
+<script>
+function updateTime(){
+  const now = new Date();
 
-</div>
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString("tr-TR");
+
+  document.getElementById("date").textContent =
+    now.toLocaleDateString("tr-TR",{
+      day:"2-digit",
+      month:"long",
+      year:"numeric"
+    });
+
+  document.getElementById("day").textContent =
+    now.toLocaleDateString("tr-TR",{weekday:"long"});
+}
+
+updateTime();
+setInterval(updateTime,1000);
+</script>
 
 </body>
 </html>
