@@ -217,8 +217,7 @@ function yaz(id, deger){
 
 async function canliYukle(){
   const r = await fetch("/api/prices");
-const text = await r.text();
-const d = JSON.parse(text);
+const d = await r.json();
 
   const eslesme = {
     hasAltin: "gram-altin",
