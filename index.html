@@ -195,18 +195,25 @@ const db = getDatabase(app);
 
 let karlar = {};
 
-function sayi(v){
-  return Number(String(v || "0").replace(/\./g,"").replace(",","."));
-}
+  function sayi(v){
+  const temiz = String(v ?? "").trim();
+
+  if (!temiz || temiz === "-") return null;
+
+  const num = Number(temiz.replace(/\./g,"").replace(",","."));
+
+  return Number.isFinite(num) ? num : null;
+  }
 
 function yaz(id, deger){
   const el = document.getElementById(id);
   if(el) el.textContent = Math.round(deger).toLocaleString("tr-TR");
 }
 
-function kar(key, tip){
-  return sayi(karlar?.[key]?.[tip] || 0);
-}
+
+  function kar(key, tip){
+  return sayi(karlar?.[key]?.[tip]) || 0;
+  }
 
 async function canliYukle(){
   const r = await fetch("/api/prices");
@@ -231,10 +238,12 @@ async function canliYukle(){
     if(!item) return;
 
     const alis = sayi(item["Alış"]);
-    const satis = sayi(item["Satış"]);
+const satis = sayi(item["Satış"]);
 
-    yaz(key+"Alis", alis + kar(key,"alis"));
-    yaz(key+"Satis", satis + kar(key,"satis"));
+if (alis === null || satis === null) return;
+
+yaz(key+"Alis", alis + kar(key,"alis"));
+yaz(key+"Satis", satis + kar(key,"satis"));
   });
 
   document.getElementById("sonGuncelleme").innerHTML =
