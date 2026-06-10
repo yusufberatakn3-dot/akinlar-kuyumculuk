@@ -234,18 +234,18 @@ const d = JSON.parse(text);
     euro: "EUR"
   };
 
-  Object.keys(eslesme).forEach(key=>{
-    const item = d[eslesme[key]];
-    if(!item) return;
+Object.keys(eslesme).forEach(key=>{
+  const item = d[eslesme[key]];
+  if(!item) return;
 
-    const alis = sayi(item["Alış"]);
-const satis = sayi(item["Satış"]);
+  const alis = sayi(item["Alış"]);
+  const satis = sayi(item["Satış"]);
 
-if (alis === null || satis === null) return;
+  if (alis === null || satis === null) return;
 
-yaz(key+"Alis", alis + kar(key,"alis"));
-yaz(key+"Satis", satis + kar(key,"satis"));
-  });
+  yaz(key+"Alis", alis + kar(key,"alis"));
+  yaz(key+"Satis", satis + kar(key,"satis"));
+});
 
   document.getElementById("sonGuncelleme").innerHTML =
     new Date().toLocaleString("tr-TR");
