@@ -1,25 +1,18 @@
 export default async function handler(req, res) {
   try {
-    const r = await fetch("https://finans.truncgil.com/today.json", {
-      headers: { "User-Agent": "Mozilla/5.0" }
-    });
+    const response = await fetch("https://finans.truncgil.com/today.json");
 
-    let text = await r.text();
-
-    const son = text.lastIndexOf("}");
-    if (son !== -1) {
-      text = text.slice(0, son + 1);
-    }
-
-    const data = JSON.parse(text);
+    const text = await response.text();
 
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.status(200).json(data);
+    res.setHeader("Content-Type", "application/json");
 
-  } catch (e) {
+    res.status(200).send(text);
+
+  } catch (error) {
     res.status(500).json({
       error: "Veri alınamadı",
-      detail: String(e)
+      detail: error.toString()
     });
   }
 }
