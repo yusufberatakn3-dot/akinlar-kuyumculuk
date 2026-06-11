@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
     const out = {
       hasAltin: find("HAS"),
-      ayar22: find("22 Ayar"),
+      ayar22: find("22 Ayar Bilezik"),
       yeniCeyrek: find("Yeni Çeyrek"),
       yeniYarim: find("Yeni Yarım"),
       yeniTam: find("Yeni Ziynet"),
