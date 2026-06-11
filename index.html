@@ -195,15 +195,15 @@ const db = getDatabase(app);
 
 let karlar = {};
 
-  function sayi(v){
-  const temiz = String(v ?? "").trim();
+function sayi(v){
+  if (typeof v === "number") return v;
 
+  const temiz = String(v ?? "").trim();
   if (!temiz || temiz === "-") return null;
 
-  const num = Number(temiz.replace(/\./g,"").replace(",","."));
-
+  const num = Number(temiz.replace(",", "."));
   return Number.isFinite(num) ? num : null;
-  }
+}
 
 function yaz(id, deger){
   const el = document.getElementById(id);
