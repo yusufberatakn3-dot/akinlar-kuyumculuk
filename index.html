@@ -262,11 +262,8 @@ setInterval(canliYukle,60000);
 <script>
 function guncelle(){
   const n = new Date();
-
   document.getElementById("saat").textContent =
-    n.toLocaleTimeString("tr-TR", {
-        timeZone: "Europe/Istanbul"
-    });
+    n.toLocaleTimeString("tr-TR");
 
   document.getElementById("tarih").innerHTML =
     n.toLocaleDateString("tr-TR",{
