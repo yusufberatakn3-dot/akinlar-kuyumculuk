@@ -264,7 +264,9 @@ function guncelle(){
   const n = new Date();
 
   document.getElementById("saat").textContent =
-    n.toLocaleTimeString("tr-TR");
+    n.toLocaleTimeString("tr-TR", {
+        timeZone: "Europe/Istanbul"
+    });
 
   document.getElementById("tarih").innerHTML =
     n.toLocaleDateString("tr-TR",{
