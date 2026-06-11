@@ -216,22 +216,25 @@ function yaz(id, deger){
   }
 
 async function canliYukle(){
-  const r = await fetch("/api/prices");
+  const r = await fetch("/api/sukob");
 const d = await r.json();
 
   const eslesme = {
-    hasAltin: "gram-altin",
-    gramAltin: "gram-altin",
-    ayar22: "22-ayar-bilezik",
-    ceyrekEski: "ceyrek-altin",
-    ceyrekYeni: "ceyrek-altin",
-    yarimEski: "yarim-altin",
-    yarimYeni: "yarim-altin",
-    tamEski: "tam-altin",
-    tamYeni: "tam-altin",
-    dolar: "USD",
-    euro: "EUR"
-  };
+  hasAltin: "hasAltin",
+  ayar22: "ayar22",
+
+  ceyrekEski: "eskiCeyrek",
+  ceyrekYeni: "yeniCeyrek",
+
+  yarimEski: "eskiYarim",
+  yarimYeni: "yeniYarim",
+
+  tamEski: "eskiTam",
+  tamYeni: "yeniTam",
+
+  dolar: "dolar",
+  euro: "euro"
+};
 
 Object.keys(eslesme).forEach(key=>{
   const item = d[eslesme[key]];
