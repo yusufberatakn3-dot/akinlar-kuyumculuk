@@ -1,18 +1,28 @@
 export default async function handler(req, res) {
   try {
-    const r = await fetch("https://sukobfiyat.com/mobil.html");
-    const html = await r.text();
+    const r = await fetch("https://sukobfiyat.com/api/prices?cache=" + Date.now());
+    const data = await r.json();
 
-    const i = html.indexOf("getJSON");
-    const parca = i > -1 ? html.slice(i - 500, i + 1500) : "getJSON bulunamadı";
+    const find = (name) => data.find(x => x.type === name);
 
-    res.status(200).json({
-      ok: true,
-      status: r.status,
-      getJSONIndex: i,
-      parca
-    });
+    const out = {
+      hasAltin: find("HAS"),
+      ayar22: find("22 Ayar"),
+      yeniCeyrek: find("Yeni Çeyrek"),
+      yeniYarim: find("Yeni Yarım"),
+      yeniTam: find("Yeni Ziynet"),
+      eskiCeyrek: find("Eski Çeyrek"),
+      eskiYarim: find("Eski Yarım"),
+      eskiTam: find("Eski Ziynet"),
+      dolar: find("USD"),
+      euro: find("EUR")
+    };
+
+    res.status(200).json(out);
   } catch (e) {
-    res.status(500).json({ ok: false, error: e.message });
+    res.status(500).json({
+      error: "SUKOB verisi alınamadı",
+      detail: e.message
+    });
   }
 }
