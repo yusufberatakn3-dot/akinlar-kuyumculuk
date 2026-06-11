@@ -240,9 +240,8 @@ Object.keys(eslesme).forEach(key=>{
   const item = d[eslesme[key]];
   if(!item) return;
 
-  const alis = sayi(item["Alış"]);
-  const satis = sayi(item["Satış"]);
-
+  const alis = sayi(item.buyPrice);
+const satis = sayi(item.sellPrice);
   if (alis === null || satis === null) return;
 
   yaz(key+"Alis", alis + kar(key,"alis"));
