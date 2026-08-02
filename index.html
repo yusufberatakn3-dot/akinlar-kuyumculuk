@@ -208,7 +208,7 @@ function sayi(v){
 
 function yaz(id, deger){
   const el = document.getElementById(id);
-  if(el) el.textContent = Math.round(deger).toLocaleString("tr-TR");
+  if (el) el.textContent = (Math.round(deger / 5) * 5).toLocaleString("tr-TR");
 }
 
 
