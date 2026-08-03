@@ -259,7 +259,16 @@ const satis = sayi(item.sellPrice);
 });
 
   document.getElementById("sonGuncelleme").innerHTML =
-    new Date().toLocaleString("tr-TR");
+    new Intl.DateTimeFormat("tr-TR", {
+  timeZone: "Europe/Istanbul",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false
+}).format(new Date());
 }
 
 onValue(ref(db,"karlar"), snap=>{
@@ -275,7 +284,13 @@ setInterval(canliYukle,60000);
 function guncelle(){
   const n = new Date();
   document.getElementById("saat").textContent =
-    n.toLocaleTimeString("tr-TR");
+    new Intl.DateTimeFormat("tr-TR", {
+  timeZone: "Europe/Istanbul",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hour12: false
+}).format(n);
 
   document.getElementById("tarih").innerHTML =
     n.toLocaleDateString("tr-TR",{
