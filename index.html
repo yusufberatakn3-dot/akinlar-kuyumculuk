@@ -415,7 +415,7 @@ function girisYap(){
   const sifre = document.getElementById("passwordInput").value;
   const dogruSifre = "1532467980Bb.";
 
-  if(sifre === dogruSifre){
+if(sifre.trim() === dogruSifre){
     document.getElementById("loginScreen").style.display = "none";
     localStorage.setItem("akinlar_giris","1");
   }else{
