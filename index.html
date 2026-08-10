@@ -139,6 +139,113 @@ td:not(:first-child){
 </head>
 
 <body>
+  <div id="loginScreen" style="
+position:fixed;
+inset:0;
+z-index:99999;
+display:flex;
+align-items:center;
+justify-content:center;
+background:radial-gradient(circle at center,#2b2200 0%,#080808 45%,#000 100%);
+font-family:Arial,sans-serif;
+">
+
+  <div style="
+  width:90%;
+  max-width:400px;
+  padding:35px 25px;
+  background:linear-gradient(145deg,#111,#050505);
+  border:2px solid #d4af37;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 0 35px rgba(212,175,55,.25);
+  ">
+
+    <div style="
+    color:#ffd700;
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:1px;
+    text-shadow:0 0 12px #ffd700;
+    margin-bottom:8px;
+    ">
+      AKINLAR KUYUMCULUK
+    </div>
+
+    <div style="
+    color:#aaa;
+    font-size:13px;
+    letter-spacing:3px;
+    margin-bottom:30px;
+    ">
+      GÜVENLİ FİYAT EKRANI
+    </div>
+
+    <div style="
+    color:#fff;
+    font-size:17px;
+    font-weight:bold;
+    margin-bottom:12px;
+    ">
+      🔐 Yetkili Giriş
+    </div>
+
+    <input
+      id="passwordInput"
+      type="password"
+      placeholder="Giriş şifresini giriniz"
+      autocomplete="off"
+      style="
+      width:100%;
+      padding:16px;
+      border:1px solid #d4af37;
+      border-radius:10px;
+      background:#050505;
+      color:#fff;
+      font-size:17px;
+      text-align:center;
+      outline:none;
+      "
+    >
+
+    <button
+      onclick="girisYap()"
+      style="
+      width:100%;
+      margin-top:15px;
+      padding:15px;
+      border:0;
+      border-radius:10px;
+      background:linear-gradient(#ffe36a,#caa000);
+      color:#000;
+      font-size:17px;
+      font-weight:900;
+      cursor:pointer;
+      "
+    >
+      GİRİŞ YAP
+    </button>
+
+    <div id="loginError" style="
+    display:none;
+    color:#ff4d4d;
+    margin-top:14px;
+    font-size:14px;
+    font-weight:bold;
+    ">
+      ❌ Şifre hatalı. Lütfen tekrar deneyin.
+    </div>
+
+    <div style="
+    margin-top:25px;
+    color:#666;
+    font-size:11px;
+    ">
+      Yetkisiz erişim engellenmiştir.
+    </div>
+
+  </div>
+  </div>
 
 <div class="top">
   <div class="box" id="saat">00:00:00</div>
@@ -302,6 +409,23 @@ function guncelle(){
 
 guncelle();
 setInterval(guncelle,1000);
+</script>
+<script>
+function girisYap(){
+  const sifre = document.getElementById("passwordInput").value;
+  const dogruSifre = "1532467980Bb.";
+
+  if(sifre === dogruSifre){
+    document.getElementById("loginScreen").style.display = "none";
+    localStorage.setItem("akinlar_giris","1");
+  }else{
+    document.getElementById("loginError").style.display = "block";
+  }
+}
+
+if(localStorage.getItem("akinlar_giris") === "1"){
+  document.getElementById("loginScreen").style.display = "none";
+}
 </script>
 
 </body>
