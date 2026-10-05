@@ -362,7 +362,46 @@ function sayi(v){
   function kar(key, tip){
   return sayi(karlar?.[key]?.[tip]) || 0;
   }
+<script>
+/* =========================
+   FİYAT DEĞİŞİMİ TAKİP
+========================= */
 
+let oncekiFiyatlar = {};
+let ilkFiyatlarAlindi = false;
+
+function fiyatDegisiminiKontrolEt(id, yeniFiyat){
+
+    if(!Number.isFinite(yeniFiyat)){
+        return;
+    }
+
+    /* İlk fiyat sadece hafızaya alınır */
+    if(!Object.prototype.hasOwnProperty.call(
+        oncekiFiyatlar,
+        id
+    )){
+        oncekiFiyatlar[id] = yeniFiyat;
+        return;
+    }
+
+    const eskiFiyat = oncekiFiyatlar[id];
+
+    const fark = yeniFiyat - eskiFiyat;
+
+    /* Yeni fiyatı hafızaya kaydet */
+    oncekiFiyatlar[id] = yeniFiyat;
+
+    /* 100 TL veya daha fazla yükseliş */
+    if(fark >= 100){
+        fiyatAlarmi("yukselis");
+    }
+
+    /* 100 TL veya daha fazla düşüş */
+    else if(fark <= -100){
+        fiyatAlarmi("dusus");
+    }
+}
 async function canliYukle(){
   const r = await fetch("/api/sukob");
 const d = await r.json();
@@ -394,6 +433,15 @@ const satis = sayi(item.sellPrice);
 
   yaz(key+"Alis", alis + kar(key,"alis"));
   yaz(key+"Satis", satis + kar(key,"satis"));
+  fiyatDegisiminiKontrolEt(
+  key + "_alis",
+  alis + kar(key,"alis")
+);
+
+fiyatDegisiminiKontrolEt(
+  key + "_satis",
+  satis + kar(key,"satis")
+);
 });
 
   document.getElementById("sonGuncelleme").innerHTML =
@@ -458,6 +506,132 @@ if(localStorage.getItem("akinlar_giris") === "1"){
   document.getElementById("loginScreen").style.display = "none";
 }
 </script>
+<script>
+/* =========================
+   AKINLAR ALARM MOTORU
+========================= */
 
+let alarmAudio = null;
+let alarmCalıyor = false;
+
+function alarmSesiniHazirla(){
+
+    const AC =
+        window.AudioContext ||
+        window.webkitAudioContext;
+
+    if(!AC) return;
+
+    if(!alarmAudio){
+        alarmAudio = new AC();
+    }
+
+    if(alarmAudio.state === "suspended"){
+        alarmAudio.resume();
+    }
+}
+window.alarmSesiniHazirla = alarmSesiniHazirla;
+
+function alarmBip(frekans, baslangic, sure){
+
+    if(!alarmAudio) return;
+
+    const oscillator =
+        alarmAudio.createOscillator();
+
+    const gain =
+        alarmAudio.createGain();
+
+    const zaman =
+        alarmAudio.currentTime + baslangic;
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.setValueAtTime(
+        frekans,
+        zaman
+    );
+
+    gain.gain.setValueAtTime(
+        0.001,
+        zaman
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.95,
+        zaman + 0.025
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        zaman + sure
+    );
+
+    oscillator.connect(gain);
+    gain.connect(alarmAudio.destination);
+
+    oscillator.start(zaman);
+
+    oscillator.stop(
+        zaman + sure + 0.05
+    );
+}
+
+
+function yukselisAlarmi(){
+
+    alarmSesiniHazirla();
+
+    if(!alarmAudio) return;
+
+    for(let i = 0; i < 7; i++){
+
+        const t = i * 1.45;
+
+        alarmBip(880, t, 0.25);
+        alarmBip(1175, t + 0.32, 0.25);
+
+    }
+}
+
+
+function dususAlarmi(){
+
+    alarmSesiniHazirla();
+
+    if(!alarmAudio) return;
+
+    for(let i = 0; i < 7; i++){
+
+        const t = i * 1.45;
+
+        alarmBip(660, t, 0.30);
+        alarmBip(440, t + 0.38, 0.30);
+
+    }
+}
+
+
+function fiyatAlarmi(tip){
+
+    if(alarmCalıyor) return;
+
+    alarmCalıyor = true;
+
+    if(tip === "yukselis"){
+        yukselisAlarmi();
+    }
+
+    if(tip === "dusus"){
+        dususAlarmi();
+    }
+
+    setTimeout(function(){
+
+        alarmCalıyor = false;
+
+    },10000);
+}
+</script>
 </body>
 </html>
