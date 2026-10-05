@@ -1,9 +1,26 @@
 export default async function handler(req, res) {
   try {
-    const r = await fetch("https://sukobfiyat.com/api/prices?cache=" + Date.now());
-    const data = await r.json();
+    const response = await fetch("https://sukobfiyat.com/api/prices", {
+      headers: {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
+      },
+      cache: "no-store"
+    });
 
-    const find = (name) => data.find(x => x.type === name);
+    if (!response.ok) {
+      throw new Error(
+        `SUKOB HTTP ${response.status} - ${response.statusText}`
+      );
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data)) {
+      throw new Error("SUKOB geçersiz veri döndürdü");
+    }
+
+    const find = (name) => data.find(x => x.type === name) || null;
 
     const out = {
       hasAltin: find("HAS"),
@@ -19,7 +36,10 @@ export default async function handler(req, res) {
     };
 
     res.status(200).json(out);
+
   } catch (e) {
+    console.error("SUKOB API HATASI:", e);
+
     res.status(500).json({
       error: "SUKOB verisi alınamadı",
       detail: e.message
