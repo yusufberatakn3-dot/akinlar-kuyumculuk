@@ -1,40 +1,26 @@
 export default async function handler(req, res) {
   try {
-    const url = "https://sukobfiyat.com/api/prices";
-
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
-
-    const response = await fetch(url, {
+    const response = await fetch("https://sukobfiyat.com/api/prices", {
       method: "GET",
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/140 Safari/537.36",
+        "User-Agent": "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/140.0.0.0 Mobile Safari/537.36",
         "Accept": "application/json, text/plain, */*",
-        "Cache-Control": "no-cache",
-        "Pragma": "no-cache"
+        "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+        "Referer": "https://sukobfiyat.com/",
+        "Origin": "https://sukobfiyat.com"
       },
-      cache: "no-store",
-      signal: controller.signal
+      cache: "no-store"
     });
 
-    clearTimeout(timeout);
-
-    const contentType = response.headers.get("content-type") || "";
     const raw = await response.text();
 
-    if (!response.ok) {
-      console.error("SUKOB HTTP HATASI:", {
-        status: response.status,
-        statusText: response.statusText,
-        contentType,
-        body: raw.substring(0, 1000)
-      });
+    console.log("SUKOB DURUM:", response.status);
+    console.log("SUKOB CEVAP:", raw.substring(0, 500));
 
+    if (!response.ok) {
       return res.status(502).json({
-        error: "SUKOB API hata döndürdü",
+        error: "SUKOB erişim hatası",
         status: response.status,
-        statusText: response.statusText,
-        contentType,
         detail: raw.substring(0, 1000)
       });
     }
@@ -43,55 +29,43 @@ export default async function handler(req, res) {
 
     try {
       data = JSON.parse(raw);
-    } catch (jsonError) {
-      console.error("SUKOB JSON HATASI:", raw.substring(0, 1000));
-
+    } catch {
       return res.status(502).json({
-        error: "SUKOB geçerli JSON döndürmedi",
-        contentType,
+        error: "SUKOB JSON okunamadı",
         detail: raw.substring(0, 1000)
       });
     }
 
     if (!Array.isArray(data)) {
       return res.status(502).json({
-        error: "SUKOB beklenmeyen veri döndürdü",
+        error: "SUKOB veri formatı beklenmedik",
         receivedType: typeof data
       });
     }
 
-    const find = (name) =>
-      data.find(x => x && x.type === name) || null;
+    const bul = (tip) =>
+      data.find(x => x && x.type === tip) || null;
 
-    const out = {
-      hasAltin: find("HAS"),
-      ayar22: find("22 Ayar Bilezik"),
-      yeniCeyrek: find("Yeni Çeyrek"),
-      yeniYarim: find("Yeni Yarım"),
-      yeniTam: find("Yeni Ziynet"),
-      eskiCeyrek: find("Eski Çeyrek"),
-      eskiYarim: find("Eski Yarım"),
-      eskiTam: find("Eski Ziynet"),
-      dolar: find("USD"),
-      euro: find("EUR")
+    const sonuc = {
+      hasAltin: bul("HAS"),
+      ayar22: bul("22 Ayar Bilezik"),
+      yeniCeyrek: bul("Yeni Çeyrek"),
+      yeniYarim: bul("Yeni Yarım"),
+      yeniTam: bul("Yeni Ziynet"),
+      eskiCeyrek: bul("Eski Çeyrek"),
+      eskiYarim: bul("Eski Yarım"),
+      eskiTam: bul("Eski Ziynet"),
+      dolar: bul("USD"),
+      euro: bul("EUR")
     };
 
-    console.log("SUKOB BAŞARILI:", {
-      adet: data.length,
-      has: !!out.hasAltin,
-      ayar22: !!out.ayar22,
-      dolar: !!out.dolar,
-      euro: !!out.euro
-    });
-
-    return res.status(200).json(out);
+    return res.status(200).json(sonuc);
 
   } catch (e) {
-    console.error("SUKOB BAĞLANTI HATASI:", e);
+    console.error("SUKOB HATA:", e);
 
     return res.status(502).json({
-      error: "SUKOB bağlantısı başarısız",
-      name: e?.name || "UnknownError",
+      error: "SUKOB bağlantı hatası",
       detail: e?.message || String(e)
     });
   }
