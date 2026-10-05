@@ -1,0 +1,37 @@
+name: SUKOB Fiyat Güncelle
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repoyu indir
+        uses: actions/checkout@v4
+
+      - name: SUKOB verisini al
+        run: |
+          curl -L --fail \
+            -A "Mozilla/5.0" \
+            -H "Accept: application/json" \
+            "https://sukobfiyat.com/api/prices" \
+            -o sukob.json
+
+      - name: Kontrol et
+        run: |
+          node -e "const d=require('./sukob.json'); if(!Array.isArray(d)) process.exit(1); console.log('SUKOB VERİSİ GELDİ:', d.length, 'ürün');"
+
+      - name: Dosyayı kaydet
+        run: |
+          git config user.name "SUKOB Bot"
+          git config user.email "actions@github.com"
+          git add sukob.json
+          git diff --cached --quiet || git commit -m "SUKOB fiyatlarını güncelle"
+          git push
