@@ -3,12 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Akınlar Kuyumculuk - Sistem Teşhis</title>
+<title>Akınlar Kuyumculuk - Tam Sistem Teşhis</title>
 
 <style>
+*{
+  box-sizing:border-box;
+}
+
 body{
   margin:0;
-  padding:20px;
+  padding:18px;
   background:#111;
   color:#fff;
   font-family:Arial,sans-serif;
@@ -16,31 +20,31 @@ body{
 
 h1{
   color:#ffd700;
-  margin-bottom:8px;
+  margin:0 0 8px;
 }
 
 #durum{
   color:#aaa;
-  margin-bottom:20px;
+  margin-bottom:18px;
 }
 
-.box{
+.kutu{
+  background:#1b1b1b;
+  border:1px solid #444;
+  border-radius:13px;
   padding:15px;
   margin:10px 0;
-  border-radius:12px;
-  border:1px solid #444;
-  background:#1b1b1b;
 }
 
 .ok{
-  border-color:#21c55d;
+  border-color:#22c55e;
 }
 
-.bad{
+.hata{
   border-color:#ef4444;
 }
 
-.warn{
+.uyari{
   border-color:#f59e0b;
 }
 
@@ -51,27 +55,34 @@ h1{
 }
 
 .detay{
-  line-height:1.6;
   color:#ddd;
+  line-height:1.6;
+  word-break:break-word;
 }
 
 .sonuc{
-  margin-top:20px;
-  padding:18px;
-  border-radius:12px;
-  background:#222;
+  background:#202020;
   border:2px solid #ffd700;
+  border-radius:13px;
+  padding:18px;
+  margin-top:18px;
+  line-height:1.7;
 }
 
 button{
   width:100%;
-  padding:15px;
+  padding:16px;
+  margin-top:12px;
   border:0;
-  border-radius:10px;
+  border-radius:11px;
   background:#ffd700;
   color:#111;
   font-size:17px;
   font-weight:bold;
+}
+
+iframe{
+  display:none;
 }
 </style>
 </head>
@@ -79,52 +90,72 @@ button{
 <body>
 
 <h1>🔧 Akınlar Kuyumculuk</h1>
-<div id="durum">Sistem kontrol ediliyor...</div>
+
+<div id="durum">
+Sistem kontrol ediliyor...
+</div>
 
 <div id="sonuclar"></div>
 
-<button onclick="kontrolEt()">🔄 Tekrar Kontrol Et</button>
+<iframe id="testFrame"></iframe>
+
+<button onclick="baslat()">
+🔄 Tekrar Kontrol Et
+</button>
+
 
 <script>
 
-const sonuclar = document.getElementById("sonuclar");
-const durum = document.getElementById("durum");
+const sonucAlani =
+document.getElementById("sonuclar");
 
-function kutu(baslik, durumTipi, detay){
+const durum =
+document.getElementById("durum");
+
+const frame =
+document.getElementById("testFrame");
+
+
+let ilkSorun = null;
+
+function sorun(dosya){
+  if(!ilkSorun){
+    ilkSorun = dosya;
+  }
+}
+
+
+function kutu(baslik,tur,detay){
 
   let ikon = "🟢";
 
-  if(durumTipi === "bad") ikon = "🔴";
-  if(durumTipi === "warn") ikon = "🟡";
+  if(tur === "hata"){
+    ikon = "🔴";
+  }
+
+  if(tur === "uyari"){
+    ikon = "🟡";
+  }
 
   return `
-    <div class="box ${durumTipi}">
-      <div class="baslik">${ikon} ${baslik}</div>
-      <div class="detay">${detay}</div>
+    <div class="kutu ${tur}">
+      <div class="baslik">
+        ${ikon} ${baslik}
+      </div>
+
+      <div class="detay">
+        ${detay}
+      </div>
     </div>
   `;
 }
 
-async function kontrolEt(){
 
-  sonuclar.innerHTML = "";
-  durum.innerHTML = "Kontrol ediliyor...";
+/* =====================================================
+   API TESTİ
+===================================================== */
 
-  let rapor = "";
-  let ilkHata = "";
-
-  /* 1 - SİTE */
-
-  rapor += kutu(
-    "Site çalışıyor",
-    "ok",
-    "Sayfa açıldı ve JavaScript çalışıyor."
-  );
-
-
-  /* 2 - API */
-
-  let veri = null;
+async function apiTest(){
 
   try{
 
@@ -135,317 +166,805 @@ async function kontrolEt(){
       }
     );
 
-    const metin = await cevap.text();
+    const metin =
+      await cevap.text();
 
     if(!cevap.ok){
 
-      ilkHata = "api/sukob.js";
+      sorun("api/sukob.js");
 
-      rapor += kutu(
-        "Vercel API / SUKOB",
-        "bad",
+      return kutu(
+        "Vercel API",
+        "hata",
         `
-        <b>HATA:</b> HTTP ${cevap.status}<br><br>
-        <b>SORUNUN YERİ:</b> api/sukob.js<br>
-        <b>YAPILACAK:</b> SUKOB bağlantısı kontrol edilmeli.<br><br>
-        <b>SUNUCUNUN CEVABI:</b><br>
-        ${metin.substring(0,500)}
+        <b>HTTP:</b> ${cevap.status}<br><br>
+
+        <b>SORUNUN YERİ:</b><br>
+        api/sukob.js<br><br>
+
+        <b>YAPILACAK:</b><br>
+        SUKOB bağlantısı kontrol edilmeli.<br><br>
+
+        <b>Sunucu cevabı:</b><br>
+        ${metin.substring(0,700)}
         `
       );
-
-      sonuclar.innerHTML = rapor + `
-        <div class="sonuc">
-        🔴 <b>Sistemin ilk kırıldığı yer:</b><br><br>
-        api/sukob.js
-        </div>
-      `;
-
-      durum.innerHTML = "Kontrol tamamlandı — sorun bulundu.";
-      return;
     }
+
+    let veri;
 
     try{
-      veri = JSON.parse(metin);
+
+      veri =
+        JSON.parse(metin);
+
     }catch(e){
 
-      ilkHata = "api/sukob.js";
+      sorun("api/sukob.js");
 
-      rapor += kutu(
-        "SUKOB JSON verisi",
-        "bad",
+      return kutu(
+        "SUKOB JSON",
+        "hata",
         `
-        <b>HATA:</b> API cevap verdi fakat JSON okunamadı.<br><br>
-        <b>SORUNUN YERİ:</b> api/sukob.js
+        API cevap verdi fakat JSON okunamadı.<br><br>
+
+        <b>SORUNUN YERİ:</b>
+        api/sukob.js
         `
       );
-
-      sonuclar.innerHTML = rapor;
-      durum.innerHTML = "Kontrol tamamlandı — sorun bulundu.";
-      return;
     }
 
-    rapor += kutu(
-      "Vercel API çalışıyor",
+    window.sukob = veri;
+
+    return kutu(
+      "Vercel API",
       "ok",
-      "/api/sukob cevap verdi."
+      `
+      <b>/api/sukob</b> çalışıyor.<br>
+      JSON başarıyla alındı.
+      `
     );
 
   }catch(e){
 
-    ilkHata = "api/sukob.js";
+    sorun("api/sukob.js");
 
-    rapor += kutu(
+    return kutu(
       "Vercel API",
-      "bad",
+      "hata",
       `
       <b>HATA:</b> ${e.message}<br><br>
-      <b>SORUNUN YERİ:</b> api/sukob.js
+
+      <b>SORUNUN YERİ:</b>
+      api/sukob.js
       `
     );
+  }
+}
 
-    sonuclar.innerHTML = rapor;
-    durum.innerHTML = "Kontrol tamamlandı — sorun bulundu.";
-    return;
+
+/* =====================================================
+   SUKOB ÜRÜNLERİ
+===================================================== */
+
+function sukobUrunTest(){
+
+  const veri = window.sukob;
+
+  if(!veri){
+
+    return kutu(
+      "SUKOB ürünleri",
+      "hata",
+      "API verisi olmadığı için ürünler kontrol edilemedi."
+    );
   }
 
-
-  /* 3 - SUKOB ÜRÜNLERİ */
-
-  const alanlar = {
+  const urunler = {
 
     hasAltin:"HAS Altın",
-
     ayar22:"22 Ayar Bilezik",
-
     yeniCeyrek:"Yeni Çeyrek",
-
     yeniYarim:"Yeni Yarım",
-
     yeniTam:"Yeni Ziynet",
-
     eskiCeyrek:"Eski Çeyrek",
-
     eskiYarim:"Eski Yarım",
-
     eskiTam:"Eski Ziynet",
-
     dolar:"USD",
-
     euro:"EUR"
 
   };
 
-  let eksik = [];
-  let hatali = [];
+  let eksik=[];
+  let bozuk=[];
 
-  for(const key in alanlar){
+  for(const key in urunler){
 
-    if(!veri[key]){
+    const urun = veri[key];
 
-      eksik.push(alanlar[key]);
+    if(!urun){
 
-    }else{
+      eksik.push(urunler[key]);
 
-      const alis = Number(veri[key].buyPrice);
-      const satis = Number(veri[key].sellPrice);
-
-      if(!Number.isFinite(alis) || !Number.isFinite(satis)){
-
-        hatali.push(alanlar[key]);
-
-      }
-
+      continue;
     }
 
+    const alis =
+      Number(urun.buyPrice);
+
+    const satis =
+      Number(urun.sellPrice);
+
+    if(
+      !Number.isFinite(alis) ||
+      !Number.isFinite(satis)
+    ){
+
+      bozuk.push(urunler[key]);
+    }
   }
 
   if(eksik.length){
 
-    ilkHata = ilkHata || "api/sukob.js";
+    sorun("api/sukob.js");
 
-    rapor += kutu(
-      "SUKOB ürün verileri",
-      "bad",
+    return kutu(
+      "SUKOB ürünleri",
+      "hata",
       `
-      Eksik ürünler:<br>
-      <b>${eksik.join(", ")}</b><br><br>
+      <b>Eksik:</b><br>
+      ${eksik.join("<br>")}<br><br>
 
-      <b>SORUNUN YERİ:</b> api/sukob.js<br>
-      <b>YAPILACAK:</b> SUKOB alan eşleştirmesi kontrol edilmeli.
-      `
-    );
-
-  }else if(hatali.length){
-
-    ilkHata = ilkHata || "api/sukob.js";
-
-    rapor += kutu(
-      "SUKOB fiyat değerleri",
-      "bad",
-      `
-      Geçersiz fiyatlar:<br>
-      <b>${hatali.join(", ")}</b><br><br>
-
-      <b>SORUNUN YERİ:</b> api/sukob.js / SUKOB verisi
+      <b>SORUNUN YERİ:</b>
+      api/sukob.js
       `
     );
-
-  }else{
-
-    rapor += kutu(
-      "SUKOB verileri",
-      "ok",
-      `
-      Beklenen 10 ürünün tamamı geldi.<br>
-      Alış ve satış değerleri okunabiliyor.
-      `
-    );
-
   }
 
+  if(bozuk.length){
 
-  /* 4 - INDEX.HTML */
+    sorun("api/sukob.js");
 
-  const gerekenIDler = [
+    return kutu(
+      "SUKOB fiyatları",
+      "hata",
+      `
+      <b>Geçersiz:</b><br>
+      ${bozuk.join("<br>")}<br><br>
 
-    "hasAltinAlis",
-    "hasAltinSatis",
+      <b>SORUNUN YERİ:</b>
+      api/sukob.js
+      `
+    );
+  }
 
-    "ayar22Alis",
-    "ayar22Satis",
+  return kutu(
+    "SUKOB ürünleri",
+    "ok",
+    `
+    10 ürünün tamamı geldi.<br>
+    Alış ve satış fiyatları sayısal.
+    `
+  );
+}
 
-    "ceyrekEskiAlis",
-    "ceyrekEskiSatis",
 
-    "ceyrekYeniAlis",
-    "ceyrekYeniSatis",
+/* =====================================================
+   FIREBASE TESTİ
+===================================================== */
 
-    "yarimEskiAlis",
-    "yarimEskiSatis",
-
-    "yarimYeniAlis",
-    "yarimYeniSatis",
-
-    "tamEskiAlis",
-    "tamEskiSatis",
-
-    "tamYeniAlis",
-    "tamYeniSatis",
-
-    "dolarAlis",
-    "dolarSatis",
-
-    "euroAlis",
-    "euroSatis"
-
-  ];
+async function firebaseTest(){
 
   try{
 
-    const sayfa = await fetch(
-      "/index.html?diagnostic=" + Date.now(),
-      {
-        cache:"no-store"
-      }
+    const cevap =
+      await fetch(
+        "https://akinlar-kuyumculuk-default-rtdb.firebaseio.com/karlar.json?diagnostic=" + Date.now(),
+        {
+          cache:"no-store"
+        }
+      );
+
+    if(!cevap.ok){
+
+      sorun("Firebase / index.html");
+
+      return kutu(
+        "Firebase",
+        "hata",
+        `
+        <b>HTTP:</b> ${cevap.status}<br><br>
+
+        <b>SORUNUN YERİ:</b>
+        Firebase / index.html<br><br>
+
+        <b>YAPILACAK:</b>
+        Firebase bağlantısı ve erişim kontrol edilmeli.
+        `
+      );
+    }
+
+    const veri =
+      await cevap.json();
+
+    window.firebaseKarlar = veri;
+
+    if(!veri){
+
+      return kutu(
+        "Firebase karlar",
+        "uyari",
+        `
+        Firebase'e bağlanıldı fakat
+        <b>karlar</b> alanı boş görünüyor.
+        `
+      );
+    }
+
+    return kutu(
+      "Firebase bağlantısı",
+      "ok",
+      `
+      Firebase bağlantısı başarılı.<br>
+      <b>karlar</b> verisi bulundu.
+      `
     );
-
-    const html = await sayfa.text();
-
-    let eksikID = [];
-
-    for(const id of gerekenIDler){
-
-      if(
-        !html.includes(`id="${id}"`) &&
-        !html.includes(`id='${id}'`)
-      ){
-
-        eksikID.push(id);
-
-      }
-
-    }
-
-    if(eksikID.length){
-
-      ilkHata = ilkHata || "index.html";
-
-      rapor += kutu(
-        "HTML fiyat alanları",
-        "bad",
-        `
-        Eksik alanlar:<br>
-        <b>${eksikID.join(", ")}</b><br><br>
-
-        <b>SORUNUN YERİ:</b> index.html<br>
-        <b>YAPILACAK:</b> Eksik HTML fiyat alanı kontrol edilmeli.
-        `
-      );
-
-    }else{
-
-      rapor += kutu(
-        "HTML fiyat alanları",
-        "ok",
-        `
-        Beklenen 20 fiyat alanının tamamı bulundu.
-        `
-      );
-
-    }
 
   }catch(e){
 
-    ilkHata = ilkHata || "index.html";
+    sorun("Firebase / index.html");
 
-    rapor += kutu(
-      "index.html kontrolü",
-      "bad",
+    return kutu(
+      "Firebase",
+      "hata",
       `
       <b>HATA:</b> ${e.message}<br><br>
-      <b>SORUNUN YERİ:</b> index.html
+
+      <b>SORUNUN YERİ:</b>
+      Firebase / index.html
+      `
+    );
+  }
+}
+
+
+/* =====================================================
+   INDEX.HTML KONTROLÜ
+===================================================== */
+
+async function indexTest(){
+
+  try{
+
+    const cevap =
+      await fetch(
+        "/index.html?diagnostic=" + Date.now(),
+        {
+          cache:"no-store"
+        }
+      );
+
+    if(!cevap.ok){
+
+      sorun("index.html");
+
+      return kutu(
+        "index.html",
+        "hata",
+        `
+        <b>HTTP:</b> ${cevap.status}<br><br>
+
+        <b>SORUNUN YERİ:</b>
+        index.html
+        `
+      );
+    }
+
+    const html =
+      await cevap.text();
+
+    window.indexKod = html;
+
+    const gerekenler = [
+
+      "hasAltinAlis",
+      "hasAltinSatis",
+
+      "ayar22Alis",
+      "ayar22Satis",
+
+      "ceyrekEskiAlis",
+      "ceyrekEskiSatis",
+
+      "ceyrekYeniAlis",
+      "ceyrekYeniSatis",
+
+      "yarimEskiAlis",
+      "yarimEskiSatis",
+
+      "yarimYeniAlis",
+      "yarimYeniSatis",
+
+      "tamEskiAlis",
+      "tamEskiSatis",
+
+      "tamYeniAlis",
+      "tamYeniSatis",
+
+      "dolarAlis",
+      "dolarSatis",
+
+      "euroAlis",
+      "euroSatis"
+
+    ];
+
+    const eksik =
+      gerekenler.filter(
+        id =>
+          !html.includes(`id="${id}"`) &&
+          !html.includes(`id='${id}'`)
+      );
+
+    if(eksik.length){
+
+      sorun("index.html");
+
+      return kutu(
+        "HTML fiyat alanları",
+        "hata",
+        `
+        <b>Eksik alanlar:</b><br>
+        ${eksik.join("<br>")}<br><br>
+
+        <b>SORUNUN YERİ:</b>
+        index.html
+        `
+      );
+    }
+
+    return kutu(
+      "HTML fiyat alanları",
+      "ok",
+      `
+      Beklenen 20 fiyat alanının tamamı mevcut.
       `
     );
 
+  }catch(e){
+
+    sorun("index.html");
+
+    return kutu(
+      "index.html",
+      "hata",
+      `
+      ${e.message}
+      `
+    );
+  }
+}
+
+
+/* =====================================================
+   GERÇEK SAYFAYI TEST ET
+===================================================== */
+
+function gercekSayfaTest(){
+
+  return new Promise(resolve => {
+
+    frame.onload = function(){
+
+      try{
+
+        const doc =
+          frame.contentDocument ||
+          frame.contentWindow.document;
+
+        const kontroller = {
+
+          "HAS alış":
+            "hasAltinAlis",
+
+          "HAS satış":
+            "hasAltinSatis",
+
+          "22 ayar alış":
+            "ayar22Alis",
+
+          "22 ayar satış":
+            "ayar22Satis",
+
+          "Yeni çeyrek alış":
+            "ceyrekYeniAlis",
+
+          "Yeni çeyrek satış":
+            "ceyrekYeniSatis",
+
+          "Yeni yarım alış":
+            "yarimYeniAlis",
+
+          "Yeni yarım satış":
+            "yarimYeniSatis",
+
+          "Yeni tam alış":
+            "tamYeniAlis",
+
+          "Yeni tam satış":
+            "tamYeniSatis",
+
+          "USD alış":
+            "dolarAlis",
+
+          "USD satış":
+            "dolarSatis",
+
+          "EUR alış":
+            "euroAlis",
+
+          "EUR satış":
+            "euroSatis"
+
+        };
+
+        let bos=[];
+        let dolu=[];
+
+        for(const ad in kontroller){
+
+          const el =
+            doc.getElementById(
+              kontroller[ad]
+            );
+
+          if(!el){
+
+            bos.push(
+              ad + " → ID bulunamadı"
+            );
+
+            continue;
+          }
+
+          const metin =
+            (el.textContent || "").trim();
+
+          if(
+            !metin ||
+            metin === "-" ||
+            metin === "0"
+          ){
+
+            bos.push(
+              ad + " → BOŞ"
+            );
+
+          }else{
+
+            dolu.push(
+              ad + " → " + metin
+            );
+          }
+        }
+
+        if(bos.length){
+
+          sorun("index.html");
+
+          resolve(
+            kutu(
+              "Gerçek fiyat ekranı",
+              "hata",
+              `
+              <b>Boş veya çalışmayan alanlar:</b><br>
+              ${bos.join("<br>")}<br><br>
+
+              <b>DOLU ALANLAR:</b><br>
+              ${dolu.join("<br>")}<br><br>
+
+              <b>SORUNUN YERİ:</b>
+              index.html<br><br>
+
+              <b>YAPILACAK:</b>
+              JavaScript'in fiyatları HTML alanlarına
+              yazması kontrol edilmeli.
+              `
+            )
+          );
+
+          return;
+        }
+
+        resolve(
+          kutu(
+            "Gerçek fiyat ekranı",
+            "ok",
+            `
+            Fiyat alanları gerçekten dolu.<br><br>
+
+            <b>Kontrol edilen fiyatlar:</b><br>
+            ${dolu.join("<br>")}
+            `
+          )
+        );
+
+      }catch(e){
+
+        resolve(
+          kutu(
+            "Gerçek fiyat ekranı",
+            "uyari",
+            `
+            Sayfa açıldı fakat içerik okunamadı.<br><br>
+
+            Bunun sebebi tarayıcı güvenlik kısıtlaması
+            olabilir.<br><br>
+
+            <b>HATA:</b>
+            ${e.message}
+            `
+          )
+        );
+      }
+    };
+
+    frame.onerror = function(){
+
+      sorun("index.html");
+
+      resolve(
+        kutu(
+          "Gerçek fiyat ekranı",
+          "hata",
+          `
+          index.html yüklenemedi.
+          `
+        )
+      );
+    };
+
+    frame.src =
+      "/index.html?frameTest=" + Date.now();
+
+  });
+}
+
+
+/* =====================================================
+   JAVASCRIPT KOD KONTROLÜ
+===================================================== */
+
+function javascriptTest(){
+
+  const html =
+    window.indexKod || "";
+
+  const gerekenler = [
+
+    "/api/sukob",
+    "karlar",
+    "canliYukle",
+    "setInterval",
+    "hasAltinAlis",
+    "dolarAlis",
+    "euroAlis"
+
+  ];
+
+  const eksik =
+    gerekenler.filter(
+      x => !html.includes(x)
+    );
+
+  if(eksik.length){
+
+    sorun("index.html");
+
+    return kutu(
+      "JavaScript bağlantıları",
+      "hata",
+      `
+      <b>Eksik:</b><br>
+      ${eksik.join("<br>")}<br><br>
+
+      <b>SORUNUN YERİ:</b>
+      index.html
+      `
+    );
   }
 
+  return kutu(
+    "JavaScript bağlantıları",
+    "ok",
+    `
+    API, Firebase, fiyat yükleme,
+    otomatik yenileme ve HTML bağlantıları bulundu.
+    `
+  );
+}
 
-  /* SONUÇ */
 
-  if(ilkHata){
+/* =====================================================
+   SON GÜNCELLEME TESTİ
+===================================================== */
 
-    rapor += `
+function guncellemeTest(){
+
+  const html =
+    window.indexKod || "";
+
+  const adaylar = [
+
+    "sonGuncelleme",
+    "sonGuncelle",
+    "lastUpdate",
+    "guncelleme"
+
+  ];
+
+  const bulunan =
+    adaylar.filter(
+      x => html.toLowerCase().includes(
+        x.toLowerCase()
+      )
+    );
+
+  if(!bulunan.length){
+
+    return kutu(
+      "Son güncelleme sistemi",
+      "uyari",
+      `
+      Son güncelleme alanı/kodu kesin olarak bulunamadı.<br><br>
+
+      <b>Kontrol edilmesi gereken dosya:</b>
+      index.html
+      `
+    );
+  }
+
+  return kutu(
+    "Son güncelleme sistemi",
+    "ok",
+    `
+    Güncelleme ile ilgili kod bulundu:<br>
+    ${bulunan.join(", ")}
+    `
+  );
+}
+
+
+/* =====================================================
+   ANA SİSTEM
+===================================================== */
+
+async function baslat(){
+
+  ilkSorun = null;
+
+  sonucAlani.innerHTML = "";
+
+  durum.innerHTML =
+    "🔄 Sistem baştan sona kontrol ediliyor...";
+
+  let rapor = "";
+
+  rapor += kutu(
+    "Site",
+    "ok",
+    "Diagnostic sayfası çalışıyor."
+  );
+
+  rapor += await apiTest();
+
+  rapor += sukobUrunTest();
+
+  rapor += await firebaseTest();
+
+  rapor += await indexTest();
+
+  rapor += javascriptTest();
+
+  rapor += guncellemeTest();
+
+  durum.innerHTML =
+    "🔄 Gerçek fiyat ekranı test ediliyor...";
+
+  sonucAlani.innerHTML = rapor;
+
+  const gercek =
+    await gercekSayfaTest();
+
+  sonucAlani.innerHTML += gercek;
+
+
+  /* =====================================================
+     SON RAPOR
+  ===================================================== */
+
+  if(ilkSorun){
+
+    sonucAlani.innerHTML += `
       <div class="sonuc">
-        🔴 <b>İLK TESPİT EDİLEN SORUN</b><br><br>
 
-        <b>Dosya:</b> ${ilkHata}<br><br>
+        🔴 <b>SİSTEMDE SORUN BULUNDU</b>
 
-        Sistem zinciri şu sırayla kontrol edildi:<br>
-        SUKOB → API → Veri → HTML
+        <br><br>
+
+        <b>İlk tespit edilen sorun:</b><br>
+
+        ${ilkSorun}
+
+        <br><br>
+
+        Sistem zinciri:
+
+        <br><br>
+
+        SUKOB
+        →
+        API
+        →
+        VERİ
+        →
+        FIREBASE
+        →
+        KÂR AYARI
+        →
+        JAVASCRIPT
+        →
+        HTML
+        →
+        GERÇEK EKRAN
+
+        <br><br>
+
+        <b>Önemli:</b>
+        Yukarıdaki ilk kırmızı kayıt,
+        sorunun başlangıç noktasıdır.
+
       </div>
     `;
 
-    durum.innerHTML = "🔴 Sistem kontrolünde sorun bulundu.";
+    durum.innerHTML =
+      "🔴 Sistem kontrolünde sorun bulundu.";
 
   }else{
 
-    rapor += `
+    sonucAlani.innerHTML += `
       <div class="sonuc">
-        🟢 <b>SİSTEM KONTROLÜ BAŞARILI</b><br><br>
 
-        SUKOB → API → Veri → HTML bağlantısı çalışıyor.
+        🟢 <b>TÜM SİSTEM NORMAL</b>
+
+        <br><br>
+
+        SUKOB ✓<br>
+        API ✓<br>
+        Ürün verileri ✓<br>
+        Firebase ✓<br>
+        Kâr sistemi ✓<br>
+        JavaScript ✓<br>
+        HTML ✓<br>
+        Gerçek fiyat ekranı ✓
+
+        <br><br>
+
+        <b>Fiyat sisteminde teşhis edilen
+        bir sorun yok.</b>
+
       </div>
     `;
 
-    durum.innerHTML = "🟢 Sistem normal çalışıyor.";
+    durum.innerHTML =
+      "🟢 Sistem tamamen kontrol edildi.";
 
   }
 
-  sonuclar.innerHTML = rapor;
-
 }
 
-kontrolEt();
+
+baslat();
 
 </script>
 
