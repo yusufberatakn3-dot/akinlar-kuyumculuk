@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akınlar Kuyumculuk - Sistem Teşhis</title>
+
+<style>
+body{
+  margin:0;
+  padding:20px;
+  background:#111;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+h1{
+  color:#ffd700;
+  margin-bottom:8px;
+}
+
+#durum{
+  color:#aaa;
+  margin-bottom:20px;
+}
+
+.box{
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid #444;
+  background:#1b1b1b;
+}
+
+.ok{
+  border-color:#21c55d;
+}
+
+.bad{
+  border-color:#ef4444;
+}
+
+.warn{
+  border-color:#f59e0b;
+}
+
+.baslik{
+  font-size:18px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.detay{
+  line-height:1.6;
+  color:#ddd;
+}
+
+.sonuc{
+  margin-top:20px;
+  padding:18px;
+  border-radius:12px;
+  background:#222;
+  border:2px solid #ffd700;
+}
+
+button{
+  width:100%;
+  padding:15px;
+  border:0;
+  border-radius:10px;
+  background:#ffd700;
+  color:#111;
+  font-size:17px;
+  font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🔧 Akınlar Kuyumculuk</h1>
+<div id="durum">Sistem kontrol ediliyor...</div>
+
+<div id="sonuclar"></div>
+
+<button onclick="kontrolEt()">🔄 Tekrar Kontrol Et</button>
+
+<script>
+
+const sonuclar = document.getElementById("sonuclar");
+const durum = document.getElementById("durum");
+
+function kutu(baslik, durumTipi, detay){
+
+  let ikon = "🟢";
+
+  if(durumTipi === "bad") ikon = "🔴";
+  if(durumTipi === "warn") ikon = "🟡";
+
+  return `
+    <div class="box ${durumTipi}">
+      <div class="baslik">${ikon} ${baslik}</div>
+      <div class="detay">${detay}</div>
+    </div>
+  `;
+}
+
+async function kontrolEt(){
+
+  sonuclar.innerHTML = "";
+  durum.innerHTML = "Kontrol ediliyor...";
+
+  let rapor = "";
+  let ilkHata = "";
+
+  /* 1 - SİTE */
+
+  rapor += kutu(
+    "Site çalışıyor",
+    "ok",
+    "Sayfa açıldı ve JavaScript çalışıyor."
+  );
+
+
+  /* 2 - API */
+
+  let veri = null;
+
+  try{
+
+    const cevap = await fetch(
+      "/api/sukob?diagnostic=" + Date.now(),
+      {
+        cache:"no-store"
+      }
+    );
+
+    const metin = await cevap.text();
+
+    if(!cevap.ok){
+
+      ilkHata = "api/sukob.js";
+
+      rapor += kutu(
+        "Vercel API / SUKOB",
+        "bad",
+        `
+        <b>HATA:</b> HTTP ${cevap.status}<br><br>
+        <b>SORUNUN YERİ:</b> api/sukob.js<br>
+        <b>YAPILACAK:</b> SUKOB bağlantısı kontrol edilmeli.<br><br>
+        <b>SUNUCUNUN CEVABI:</b><br>
+        ${metin.substring(0,500)}
+        `
+      );
+
+      sonuclar.innerHTML = rapor + `
+        <div class="sonuc">
+        🔴 <b>Sistemin ilk kırıldığı yer:</b><br><br>
+        api/sukob.js
+        </div>
+      `;
+
+      durum.innerHTML = "Kontrol tamamlandı — sorun bulundu.";
+      return;
+    }
+
+    try{
+      veri = JSON.parse(metin);
+    }catch(e){
+
+      ilkHata = "api/sukob.js";
+
+      rapor += kutu(
+        "SUKOB JSON verisi",
+        "bad",
+        `
+        <b>HATA:</b> API cevap verdi fakat JSON okunamadı.<br><br>
+        <b>SORUNUN YERİ:</b> api/sukob.js
+        `
+      );
+
+      sonuclar.innerHTML = rapor;
+      durum.innerHTML = "Kontrol tamamlandı — sorun bulundu.";
+      return;
+    }
+
+    rapor += kutu(
+      "Vercel API çalışıyor",
+      "ok",
+      "/api/sukob cevap verdi."
+    );
+
+  }catch(e){
+
+    ilkHata = "api/sukob.js";
+
+    rapor += kutu(
+      "Vercel API",
+      "bad",
+      `
+      <b>HATA:</b> ${e.message}<br><br>
+      <b>SORUNUN YERİ:</b> api/sukob.js
+      `
+    );
+
+    sonuclar.innerHTML = rapor;
+    durum.innerHTML = "Kontrol tamamlandı — sorun bulundu.";
+    return;
+  }
+
+
+  /* 3 - SUKOB ÜRÜNLERİ */
+
+  const alanlar = {
+
+    hasAltin:"HAS Altın",
+
+    ayar22:"22 Ayar Bilezik",
+
+    yeniCeyrek:"Yeni Çeyrek",
+
+    yeniYarim:"Yeni Yarım",
+
+    yeniTam:"Yeni Ziynet",
+
+    eskiCeyrek:"Eski Çeyrek",
+
+    eskiYarim:"Eski Yarım",
+
+    eskiTam:"Eski Ziynet",
+
+    dolar:"USD",
+
+    euro:"EUR"
+
+  };
+
+  let eksik = [];
+  let hatali = [];
+
+  for(const key in alanlar){
+
+    if(!veri[key]){
+
+      eksik.push(alanlar[key]);
+
+    }else{
+
+      const alis = Number(veri[key].buyPrice);
+      const satis = Number(veri[key].sellPrice);
+
+      if(!Number.isFinite(alis) || !Number.isFinite(satis)){
+
+        hatali.push(alanlar[key]);
+
+      }
+
+    }
+
+  }
+
+  if(eksik.length){
+
+    ilkHata = ilkHata || "api/sukob.js";
+
+    rapor += kutu(
+      "SUKOB ürün verileri",
+      "bad",
+      `
+      Eksik ürünler:<br>
+      <b>${eksik.join(", ")}</b><br><br>
+
+      <b>SORUNUN YERİ:</b> api/sukob.js<br>
+      <b>YAPILACAK:</b> SUKOB alan eşleştirmesi kontrol edilmeli.
+      `
+    );
+
+  }else if(hatali.length){
+
+    ilkHata = ilkHata || "api/sukob.js";
+
+    rapor += kutu(
+      "SUKOB fiyat değerleri",
+      "bad",
+      `
+      Geçersiz fiyatlar:<br>
+      <b>${hatali.join(", ")}</b><br><br>
+
+      <b>SORUNUN YERİ:</b> api/sukob.js / SUKOB verisi
+      `
+    );
+
+  }else{
+
+    rapor += kutu(
+      "SUKOB verileri",
+      "ok",
+      `
+      Beklenen 10 ürünün tamamı geldi.<br>
+      Alış ve satış değerleri okunabiliyor.
+      `
+    );
+
+  }
+
+
+  /* 4 - INDEX.HTML */
+
+  const gerekenIDler = [
+
+    "hasAltinAlis",
+    "hasAltinSatis",
+
+    "ayar22Alis",
+    "ayar22Satis",
+
+    "ceyrekEskiAlis",
+    "ceyrekEskiSatis",
+
+    "ceyrekYeniAlis",
+    "ceyrekYeniSatis",
+
+    "yarimEskiAlis",
+    "yarimEskiSatis",
+
+    "yarimYeniAlis",
+    "yarimYeniSatis",
+
+    "tamEskiAlis",
+    "tamEskiSatis",
+
+    "tamYeniAlis",
+    "tamYeniSatis",
+
+    "dolarAlis",
+    "dolarSatis",
+
+    "euroAlis",
+    "euroSatis"
+
+  ];
+
+  try{
+
+    const sayfa = await fetch(
+      "/index.html?diagnostic=" + Date.now(),
+      {
+        cache:"no-store"
+      }
+    );
+
+    const html = await sayfa.text();
+
+    let eksikID = [];
+
+    for(const id of gerekenIDler){
+
+      if(
+        !html.includes(`id="${id}"`) &&
+        !html.includes(`id='${id}'`)
+      ){
+
+        eksikID.push(id);
+
+      }
+
+    }
+
+    if(eksikID.length){
+
+      ilkHata = ilkHata || "index.html";
+
+      rapor += kutu(
+        "HTML fiyat alanları",
+        "bad",
+        `
+        Eksik alanlar:<br>
+        <b>${eksikID.join(", ")}</b><br><br>
+
+        <b>SORUNUN YERİ:</b> index.html<br>
+        <b>YAPILACAK:</b> Eksik HTML fiyat alanı kontrol edilmeli.
+        `
+      );
+
+    }else{
+
+      rapor += kutu(
+        "HTML fiyat alanları",
+        "ok",
+        `
+        Beklenen 20 fiyat alanının tamamı bulundu.
+        `
+      );
+
+    }
+
+  }catch(e){
+
+    ilkHata = ilkHata || "index.html";
+
+    rapor += kutu(
+      "index.html kontrolü",
+      "bad",
+      `
+      <b>HATA:</b> ${e.message}<br><br>
+      <b>SORUNUN YERİ:</b> index.html
+      `
+    );
+
+  }
+
+
+  /* SONUÇ */
+
+  if(ilkHata){
+
+    rapor += `
+      <div class="sonuc">
+        🔴 <b>İLK TESPİT EDİLEN SORUN</b><br><br>
+
+        <b>Dosya:</b> ${ilkHata}<br><br>
+
+        Sistem zinciri şu sırayla kontrol edildi:<br>
+        SUKOB → API → Veri → HTML
+      </div>
+    `;
+
+    durum.innerHTML = "🔴 Sistem kontrolünde sorun bulundu.";
+
+  }else{
+
+    rapor += `
+      <div class="sonuc">
+        🟢 <b>SİSTEM KONTROLÜ BAŞARILI</b><br><br>
+
+        SUKOB → API → Veri → HTML bağlantısı çalışıyor.
+      </div>
+    `;
+
+    durum.innerHTML = "🟢 Sistem normal çalışıyor.";
+
+  }
+
+  sonuclar.innerHTML = rapor;
+
+}
+
+kontrolEt();
+
+</script>
+
+</body>
+</html>
