@@ -364,49 +364,84 @@ function sayi(v){
   }
 
 async function canliYukle(){
-  const r = await fetch("/api/sukob");
-const d = await r.json();
+  try {
+    const r = await fetch("https://sukobfiyat.com/api/prices", {
+      cache: "no-store"
+    });
 
-  const eslesme = {
-  hasAltin: "hasAltin",
-  ayar22: "ayar22",
+    if (!r.ok) {
+      throw new Error("SUKOB HTTP " + r.status);
+    }
 
-  ceyrekEski: "eskiCeyrek",
-  ceyrekYeni: "yeniCeyrek",
+    const data = await r.json();
 
-  yarimEski: "eskiYarim",
-  yarimYeni: "yeniYarim",
+    if (!Array.isArray(data)) {
+      throw new Error("SUKOB beklenmeyen veri döndürdü");
+    }
 
-  tamEski: "eskiTam",
-  tamYeni: "yeniTam",
+    const find = (name) =>
+      data.find(x => x && x.type === name) || null;
 
-  dolar: "dolar",
-  euro: "euro"
-};
+    const d = {
+      hasAltin: find("HAS"),
+      ayar22: find("22 Ayar Bilezik"),
+      yeniCeyrek: find("Yeni Çeyrek"),
+      yeniYarim: find("Yeni Yarım"),
+      yeniTam: find("Yeni Ziynet"),
+      eskiCeyrek: find("Eski Çeyrek"),
+      eskiYarim: find("Eski Yarım"),
+      eskiTam: find("Eski Ziynet"),
+      dolar: find("USD"),
+      euro: find("EUR")
+    };
 
-Object.keys(eslesme).forEach(key=>{
-  const item = d[eslesme[key]];
-  if(!item) return;
+    const eslesme = {
+      hasAltin: "hasAltin",
+      ayar22: "ayar22",
 
-  const alis = sayi(item.buyPrice);
-const satis = sayi(item.sellPrice);
-  if (alis === null || satis === null) return;
+      ceyrekEski: "eskiCeyrek",
+      ceyrekYeni: "yeniCeyrek",
 
-  yaz(key+"Alis", alis + kar(key,"alis"));
-  yaz(key+"Satis", satis + kar(key,"satis"));
-});
+      yarimEski: "eskiYarim",
+      yarimYeni: "yeniYarim",
 
-  document.getElementById("sonGuncelleme").innerHTML =
-    new Intl.DateTimeFormat("tr-TR", {
-  timeZone: "Europe/Istanbul",
-  year: "numeric",
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  second: "2-digit",
-  hour12: false
-}).format(new Date());
+      tamEski: "eskiTam",
+      tamYeni: "yeniTam",
+
+      dolar: "dolar",
+      euro: "euro"
+    };
+
+    Object.keys(eslesme).forEach(key => {
+      const item = d[eslesme[key]];
+      if (!item) return;
+
+      const alis = sayi(item.buyPrice);
+      const satis = sayi(item.sellPrice);
+
+      if (alis === null || satis === null) return;
+
+      yaz(key + "Alis", alis + kar(key, "alis"));
+      yaz(key + "Satis", satis + kar(key, "satis"));
+    });
+
+    document.getElementById("sonGuncelleme").innerHTML =
+      new Intl.DateTimeFormat("tr-TR", {
+        timeZone: "Europe/Istanbul",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).format(new Date());
+
+  } catch (e) {
+    console.error("SUKOB HATASI:", e);
+    document.getElementById("sonGuncelleme").textContent =
+      "HATA: " + e.message;
+  }
 }
 
 onValue(ref(db,"karlar"), snap=>{
