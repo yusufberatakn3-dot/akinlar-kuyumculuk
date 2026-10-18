@@ -2,99 +2,73 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Akınlar Kuyumculuk</title>
-
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#000;color:#fff;font-family:Arial,sans-serif;padding:10px;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at top,#332900 0%,#050505 45%,#000 100%);z-index:-1}
-.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-.box{border:2px solid #d4af37;border-radius:6px;padding:8px 4px;text-align:center;font-size:16px;font-weight:bold;background:rgba(0,0,0,.6)}
-.logo{position:relative;overflow:hidden;text-align:center;color:#ffd700;font-size:clamp(20px,4.3vw,34px);font-weight:900;white-space:nowrap;text-shadow:0 0 12px #ffd700,0 0 28px #8a6d00;margin:12px 0 5px}
-.logo::after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.9),transparent);animation:shine 5s infinite}
-@keyframes shine{0%{left:-60%}25%{left:120%}100%{left:120%}}
-.sub{text-align:center;font-size:13px;letter-spacing:4px;font-weight:bold;margin-bottom:10px}
-table{width:100%;border-collapse:collapse;border:2px solid #d4af37;background:#020202}
-th{background:linear-gradient(#ffe36a,#caa000);color:#000;font-size:20px;padding:10px 4px}
-td{border:1px solid rgba(255,215,0,.28);padding:8px 10px;font-size:17px;font-weight:bold}
+html,body{width:100%;min-height:100%;background:#000;color:#fff;font-family:Arial,sans-serif}
+body{padding:8px 6px 48px;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at top,#332900,#050505 45%,#000);z-index:0;pointer-events:none}
+body>*{position:relative}
+.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
+.box{min-width:0;border:2px solid #d4af37;border-radius:8px;padding:7px 3px;text-align:center;font-size:clamp(11px,3.2vw,16px);font-weight:bold;background:rgba(0,0,0,.75);overflow-wrap:anywhere}
+.logo{position:relative;overflow:hidden;text-align:center;color:#ffd700;font-size:clamp(21px,5vw,34px);font-weight:900;white-space:nowrap;text-shadow:0 0 12px #ffd700,0 0 28px #8a6d00;margin:10px 0 5px}
+.logo:after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.8),transparent);animation:shine 5s infinite}
+@keyframes shine{0%{left:-60%}25%,100%{left:120%}}
+.sub{text-align:center;font-size:clamp(11px,3.2vw,16px);letter-spacing:clamp(2px,1vw,4px);font-weight:bold;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;border:2px solid #d4af37;background:#020202;table-layout:fixed}
+th{background:linear-gradient(#ffe36a,#caa000);color:#000;font-size:clamp(14px,4vw,20px);padding:10px 3px}
+td{border:1px solid rgba(255,215,0,.28);padding:9px 5px;font-size:clamp(13px,3.5vw,18px);font-weight:bold;overflow-wrap:anywhere}
+th:first-child,td:first-child{width:47%;text-align:left}
+th:first-child{text-align:center}
+th:nth-child(2),th:nth-child(3){width:26.5%}
 td:not(:first-child){text-align:center}
 td[id$="Alis"]{color:#00ff00}
-td[id$="Satis"]{color:#ff0000}
+td[id$="Satis"]{color:#ff3030}
 .gold{color:#ffd700}
-
-#adSpace{
-height:clamp(100px,20vh,210px);
-margin:10px 0 52px;
-display:flex;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-background:#000;
-}
-#adSpace img{
-max-width:100%;
-max-height:100%;
-width:auto;
-height:auto;
-object-fit:contain;
-}
-
-.footer{position:fixed;bottom:0;left:0;width:100%;height:42px;background:#000;border-top:2px solid #d4af37;color:#ffd700;font-size:16px;font-weight:bold;white-space:nowrap;overflow:hidden;display:flex;align-items:center;z-index:20}
+#adSpace{width:100%;height:clamp(130px,27vh,300px);margin:10px auto 8px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000}
+#adSpace img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.footer{position:fixed;z-index:20;bottom:0;left:0;width:100%;height:42px;background:#000;border-top:2px solid #d4af37;color:#ffd700;font-size:clamp(12px,3.5vw,16px);font-weight:bold;white-space:nowrap;overflow:hidden;display:flex;align-items:center}
 .marquee{display:inline-block;padding-left:100%;animation:marquee 18s linear infinite}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-100%)}}
-
-#loginScreen{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#2b2200 0%,#080808 45%,#000 100%);padding:16px;overflow:auto}
-.login-card{width:90%;max-width:400px;padding:30px 24px;background:linear-gradient(145deg,#111,#050505);border:2px solid #d4af37;border-radius:18px;text-align:center;box-shadow:0 0 35px rgba(212,175,55,.25);margin:auto}
-.login-title{color:#ffd700;font-size:clamp(22px,5vw,30px);font-weight:900;text-shadow:0 0 12px #ffd700;margin-bottom:8px}
-.login-sub{color:#aaa;font-size:13px;letter-spacing:3px;margin-bottom:25px}
-#passwordInput{width:100%;padding:15px;border:1px solid #d4af37;border-radius:10px;background:#050505;color:#fff;font-size:17px;text-align:center;margin-top:12px}
-.btn{border:0;border-radius:8px;padding:12px 16px;background:linear-gradient(#ffe36a,#caa000);color:#000;font-weight:900;font-size:15px;cursor:pointer}
-.login-card .btn{width:100%;margin-top:12px}
-#loginError{display:none;color:#ff4d4d;margin-top:12px;font-size:14px;font-weight:bold}
-
-#adminPanel{display:none;position:fixed;inset:0;z-index:100000;background:#090909;color:white;overflow:auto;padding:18px}
+#loginScreen{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:#080808;padding:16px}
+.login-card{width:100%;max-width:400px;padding:25px 20px;background:#111;border:2px solid #d4af37;border-radius:16px;text-align:center}
+.login-title{color:#ffd700;font-size:clamp(22px,5vw,30px);font-weight:900;margin-bottom:10px}
+.login-sub{color:#aaa;font-size:13px;letter-spacing:2px;margin-bottom:22px}
+#passwordInput{width:100%;padding:14px;border:1px solid #d4af37;border-radius:8px;background:#050505;color:white;font-size:17px;text-align:center;margin:10px 0}
+.btn{border:0;border-radius:9px;padding:13px 12px;background:linear-gradient(#ffe36a,#caa000);color:#000;font-weight:900;font-size:15px;cursor:pointer}
+.login-card .btn{width:100%}
+#loginError{display:none;color:#ff4d4d;margin-top:12px;font-weight:bold}
+#adminPanel{display:none;position:fixed;inset:0;z-index:2000;background:#090909;color:white;overflow:auto;padding:16px}
 .admin-card{max-width:520px;margin:10px auto;padding:20px;border:2px solid #d4af37;border-radius:12px;background:#111}
 .admin-card h2{color:#ffd700;margin-bottom:12px}
 .admin-card label{display:block;margin:14px 0 6px;font-weight:bold}
-.admin-card input,.admin-card select{width:100%;padding:12px;border-radius:7px;border:1px solid #a88922;background:#050505;color:#fff;font-size:16px}
+.admin-card input,.admin-card select{width:100%;padding:12px;border-radius:7px;border:1px solid #a88922;background:#050505;color:white;font-size:16px}
 #preview{max-width:100%;max-height:220px;display:none;margin:12px auto;object-fit:contain}
 .admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .admin-actions .btn{flex:1;min-width:120px}
-#adminStatus{margin-top:12px;font-weight:bold;overflow-wrap:anywhere}
-@media(max-width:520px){
-body{padding:6px}
-.box{font-size:12px;padding:7px 2px}
-th{font-size:15px;padding:8px 2px}
-td{font-size:13px;padding:8px 4px}
-.sub{letter-spacing:2px}
-.footer{font-size:13px}
-}
+#adminStatus{margin-top:12px;overflow-wrap:anywhere;font-weight:bold}
+#adminLauncher{position:fixed;right:0;top:45%;z-index:500;background:#111;color:#ffd700;border:1px solid #d4af37;border-radius:24px 0 0 24px;padding:12px;display:none}
+@media(min-width:700px){body{max-width:1100px;margin:auto}td{padding:12px 10px}}
 </style>
 </head>
-
 <body>
 
 <div id="loginScreen">
-<div class="login-card">
-<div class="login-title">AKINLAR KUYUMCULUK</div>
-<div class="login-sub">GÜVENLİ FİYAT EKRANI</div>
-<div style="font-size:17px;font-weight:bold">🔐 Yetkili Giriş</div>
-<input id="passwordInput" type="password" placeholder="Giriş şifresini giriniz" autocomplete="off">
-<button class="btn" onclick="girisYap()">GİRİŞ YAP</button>
-<div id="loginError">Şifre yanlış. Tekrar deneyiniz.</div>
-<div style="margin-top:18px;padding:12px;border:1px solid #8b0000;border-radius:8px;color:#aaa;font-size:11px;line-height:1.5;text-align:left">
-<div style="color:#ff3333;font-size:14px;font-weight:900;text-align:center;margin-bottom:8px">⚠️ KRİTİK GÜVENLİK UYARISI ⚠️</div>
-<b style="color:#fff">⛔ YALNIZCA YETKİLİ ERİŞİM</b><br><br>
-Bu ekran Akınlar Kuyumculuk'a özel fiyatlandırma ve ticari bilgileri içermektedir.
-</div>
-</div>
+  <div class="login-card">
+    <div class="login-title">AKINLAR KUYUMCULUK</div>
+    <div class="login-sub">GÜVENLİ FİYAT EKRANI</div>
+    <b>🔐 Yetkili Giriş</b>
+    <input id="passwordInput" type="password" placeholder="Giriş şifresini giriniz" autocomplete="current-password">
+    <button class="btn" id="loginBtn">GİRİŞ YAP</button>
+    <div id="loginError">Şifre yanlış. Tekrar deneyiniz.</div>
+  </div>
 </div>
 
 <div class="top">
-<div class="box" id="saat">00:00:00</div>
-<div class="box" id="tarih">--</div>
-<div class="box">Son Güncelleme<br><span id="sonGuncelleme">-</span></div>
+  <div class="box" id="saat">00:00:00</div>
+  <div class="box" id="tarih">--</div>
+  <div class="box">Son Güncelleme<br><span id="sonGuncelleme">-</span></div>
 </div>
 
 <div class="logo">AKINLAR KUYUMCULUK</div>
@@ -114,40 +88,38 @@ Bu ekran Akınlar Kuyumculuk'a özel fiyatlandırma ve ticari bilgileri içermek
 <tr><td>Euro</td><td id="euroAlis">-</td><td id="euroSatis">-</td></tr>
 </table>
 
-<!-- REKLAM ALANI: FİYAT TABLOSUNUN ALTINDAKİ SİYAH BOŞLUK -->
 <div id="adSpace"></div>
 
 <div class="footer">
-<div class="marquee">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95</div>
+  <div class="marquee">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95</div>
 </div>
+
+<button id="adminLauncher" type="button">☰</button>
 
 <div id="adminPanel">
-<div class="admin-card">
-<h2>Akınlar Kuyumculuk — Reklam Yönetimi</h2>
-<p>Görseli seç, süreyi belirle ve yayınla.</p>
-
-<label for="adFile">Reklam görseli</label>
-<input id="adFile" type="file" accept="image/*">
-<img id="preview" alt="Reklam önizlemesi">
-
-<label for="adDuration">Yayın süresi</label>
-<select id="adDuration">
-<option value="15">15 dakika</option>
-<option value="30">30 dakika</option>
-<option value="60" selected>1 saat</option>
-<option value="180">3 saat</option>
-<option value="360">6 saat</option>
-<option value="720">12 saat</option>
-<option value="1440">24 saat</option>
-</select>
-
-<div class="admin-actions">
-<button class="btn" id="publishBtn">YAYINLA</button>
-<button class="btn" id="removeBtn">REKLAMI KALDIR</button>
-<button class="btn" id="closeAdminBtn">KAPAT</button>
-</div>
-<div id="adminStatus"></div>
-</div>
+  <div class="admin-card">
+    <h2>Akınlar Kuyumculuk — Reklam Yönetimi</h2>
+    <p>Görseli seç, süreyi belirle ve yayınla.</p>
+    <label for="adFile">Reklam görseli</label>
+    <input id="adFile" type="file" accept="image/*">
+    <img id="preview" alt="Reklam önizlemesi">
+    <label for="adDuration">Yayın süresi</label>
+    <select id="adDuration">
+      <option value="15">15 dakika</option>
+      <option value="30">30 dakika</option>
+      <option value="60" selected>1 saat</option>
+      <option value="180">3 saat</option>
+      <option value="360">6 saat</option>
+      <option value="720">12 saat</option>
+      <option value="1440">24 saat</option>
+    </select>
+    <div class="admin-actions">
+      <button class="btn" id="publishBtn">YAYINLA</button>
+      <button class="btn" id="removeBtn">REKLAMI KALDIR</button>
+      <button class="btn" id="closeAdminBtn">KAPAT</button>
+    </div>
+    <div id="adminStatus"></div>
+  </div>
 </div>
 
 <script type="module">
@@ -170,178 +142,169 @@ const $=id=>document.getElementById(id);
 let karlar={},secilenGorsel=null,sonReklam=null;
 
 function sayi(v){
-if(typeof v==="number")return v;
-const s=String(v??"").trim();
-if(!s||s==="-")return null;
-const n=Number(s.replace(",","."));
-return Number.isFinite(n)?n:null;
+ if(typeof v==="number")return v;
+ const s=String(v??"").trim();
+ if(!s||s==="-")return null;
+ const n=Number(s.replace(",","."));
+ return Number.isFinite(n)?n:null;
 }
-
 function yaz(id,v){
-const e=$(id);
-if(!e||!Number.isFinite(v))return;
-if(id.includes("dolar")||id.includes("euro")){
-e.textContent=v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
-}else{
-e.textContent=(Math.round(v/5)*5).toLocaleString("tr-TR");
+ if(!Number.isFinite(v))return;
+ $(id).textContent=(id.includes("dolar")||id.includes("euro"))
+ ?v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})
+ :(Math.round(v/5)*5).toLocaleString("tr-TR");
 }
-}
-
 function kar(k,t){return sayi(karlar?.[k]?.[t])||0}
 
 async function canliYukle(){
-try{
-const r=await fetch("/api/sukob",{cache:"no-store"});
-if(!r.ok)throw Error("Fiyat servisi HTTP "+r.status);
-const d=await r.json();
-const eslesme={
-hasAltin:"hasAltin",ayar22:"ayar22",
-ceyrekEski:"eskiCeyrek",ceyrekYeni:"yeniCeyrek",
-yarimEski:"eskiYarim",yarimYeni:"yeniYarim",
-tamEski:"eskiTam",tamYeni:"yeniTam",dolar:"dolar",euro:"euro"
-};
-Object.keys(eslesme).forEach(k=>{
-const item=d[eslesme[k]];
-if(!item)return;
-const a=sayi(item.buyPrice),s=sayi(item.sellPrice);
-if(a===null||s===null)return;
-yaz(k+"Alis",a+kar(k,"alis"));
-yaz(k+"Satis",s+kar(k,"satis"));
-});
-$("sonGuncelleme").textContent=new Intl.DateTimeFormat("tr-TR",{
-timeZone:"Europe/Istanbul",year:"numeric",month:"2-digit",day:"2-digit",
-hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
-}).format(new Date());
-}catch(e){console.error("Canlı fiyatlar yüklenemedi",e)}
+ try{
+  const r=await fetch("/api/sukob",{cache:"no-store"});
+  if(!r.ok)throw Error("HTTP "+r.status);
+  const d=await r.json();
+  const eslesme={
+   hasAltin:"hasAltin",ayar22:"ayar22",
+   ceyrekEski:"eskiCeyrek",ceyrekYeni:"yeniCeyrek",
+   yarimEski:"eskiYarim",yarimYeni:"yeniYarim",
+   tamEski:"eskiTam",tamYeni:"yeniTam",dolar:"dolar",euro:"euro"
+  };
+  for(const k of Object.keys(eslesme)){
+   const item=d[eslesme[k]];
+   if(!item)continue;
+   const a=sayi(item.buyPrice),s=sayi(item.sellPrice);
+   if(a===null||s===null)continue;
+   yaz(k+"Alis",a+kar(k,"alis"));
+   yaz(k+"Satis",s+kar(k,"satis"));
+  }
+  $("sonGuncelleme").textContent=new Intl.DateTimeFormat("tr-TR",{
+   timeZone:"Europe/Istanbul",day:"2-digit",month:"2-digit",year:"numeric",
+   hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+  }).format(new Date());
+ }catch(e){console.error("Fiyatlar yüklenemedi:",e)}
 }
-
 onValue(ref(db,"karlar"),s=>{karlar=s.val()||{};canliYukle()});
 canliYukle();
 setInterval(canliYukle,60000);
 
 function saatTarih(){
-const n=new Date();
-$("saat").textContent=new Intl.DateTimeFormat("tr-TR",{
-timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
-}).format(n);
-$("tarih").textContent=new Intl.DateTimeFormat("tr-TR",{
-timeZone:"Europe/Istanbul",day:"2-digit",month:"long",year:"numeric"
-}).format(n);
+ const n=new Date();
+ $("saat").textContent=new Intl.DateTimeFormat("tr-TR",{
+  timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+ }).format(n);
+ $("tarih").textContent=new Intl.DateTimeFormat("tr-TR",{
+  timeZone:"Europe/Istanbul",day:"2-digit",month:"long",year:"numeric"
+ }).format(n);
 }
-saatTarih();
-setInterval(saatTarih,1000);
+saatTarih();setInterval(saatTarih,1000);
 
+/* Giriş ekranı */
+const dogruSifre="1532467980Bb.";
 function girisYap(){
-if($("passwordInput").value.trim()==="1532467980Bb."){
-$("loginScreen").style.display="none";
-localStorage.setItem("akinlar_giris","1");
-}else{
-$("loginError").style.display="block";
+ if($("passwordInput").value.trim()===dogruSifre){
+  $("loginScreen").style.display="none";
+  $("loginError").style.display="none";
+  localStorage.setItem("akinlar_giris","1");
+ }else{
+  $("loginError").style.display="block";
+ }
 }
-}
-window.girisYap=girisYap;
+$("loginBtn").addEventListener("click",girisYap);
+$("passwordInput").addEventListener("keydown",e=>{if(e.key==="Enter")girisYap()});
 if(localStorage.getItem("akinlar_giris")==="1")$("loginScreen").style.display="none";
 
+/* Reklam gösterimi ve yönetimi */
 const adRef=ref(db,"reklam/current");
 const adminMode=new URLSearchParams(location.search).get("yonetim")==="reklam";
 
 function reklamGoster(data){
-const area=$("adSpace");
-if(!data?.imageData||!data.expiresAt||Date.now()>=Number(data.expiresAt)){
-area.replaceChildren();
-return;
+ const area=$("adSpace");
+ if(!data?.imageData||!data.expiresAt||Date.now()>=Number(data.expiresAt)){
+  area.replaceChildren();return;
+ }
+ const img=document.createElement("img");
+ img.src=data.imageData;
+ img.alt="Reklam görseli";
+ area.replaceChildren(img);
 }
-const img=document.createElement("img");
-img.src=data.imageData;
-img.alt="Akınlar Kuyumculuk reklamı";
-area.replaceChildren(img);
-}
-
 onValue(adRef,s=>{
-sonReklam=s.val();
-reklamGoster(sonReklam);
+ sonReklam=s.val();
+ reklamGoster(sonReklam);
 },e=>{
-console.error("Reklam okunamadı",e);
-if(adminMode)$("adminStatus").textContent="Firebase okuma hatası: "+e.message;
+ console.error(e);
+ if(adminMode)$("adminStatus").textContent="Reklam okunamadı: "+e.message;
 });
+setInterval(()=>{
+ if(sonReklam?.expiresAt&&Date.now()>=Number(sonReklam.expiresAt))reklamGoster(null);
+},10000);
 
 if(adminMode){
-const parola=prompt("Reklam yönetimi şifresi:");
-if(parola==="1532467980Bb."){
-$("adminPanel").style.display="block";
-}else{
-alert("Şifre yanlış.");
-history.replaceState(null,"",location.pathname);
-}
+ const parola=prompt("Reklam yönetimi şifresi:");
+ if(parola===dogruSifre){
+  $("adminPanel").style.display="block";
+ }else{
+  alert("Şifre yanlış.");
+  history.replaceState(null,"",location.pathname);
+ }
 }
 
 function gorselSikistir(file){
-return new Promise((resolve,reject)=>{
-const reader=new FileReader();
-reader.onerror=()=>reject(Error("Dosya okunamadı"));
-reader.onload=()=>{
-const img=new Image();
-img.onerror=()=>reject(Error("Görsel açılamadı"));
-img.onload=()=>{
-const scale=Math.min(1,1000/Math.max(img.width,img.height));
-const canvas=document.createElement("canvas");
-canvas.width=Math.max(1,Math.round(img.width*scale));
-canvas.height=Math.max(1,Math.round(img.height*scale));
-canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-const data=canvas.toDataURL("image/jpeg",0.65);
-if(data.length>850000)reject(Error("Görsel çok büyük; daha küçük görsel seç."));
-else resolve(data);
-};
-img.src=reader.result;
-};
-reader.readAsDataURL(file);
-});
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onerror=()=>reject(Error("Dosya okunamadı."));
+  reader.onload=()=>{
+   const img=new Image();
+   img.onerror=()=>reject(Error("Görsel açılamadı."));
+   img.onload=()=>{
+    const scale=Math.min(1,1000/Math.max(img.width,img.height));
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.round(img.width*scale));
+    canvas.height=Math.max(1,Math.round(img.height*scale));
+    canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+    const data=canvas.toDataURL("image/jpeg",0.65);
+    if(data.length>850000)reject(Error("Görsel çok büyük. Daha küçük görsel seç."));
+    else resolve(data);
+   };
+   img.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+ });
 }
-
 $("adFile").addEventListener("change",async e=>{
-const file=e.target.files?.[0];
-if(!file)return;
-try{
-secilenGorsel=await gorselSikistir(file);
-$("preview").src=secilenGorsel;
-$("preview").style.display="block";
-$("adminStatus").textContent="Önizleme hazır.";
-}catch(err){$("adminStatus").textContent=err.message}
+ const file=e.target.files?.[0];if(!file)return;
+ try{
+  secilenGorsel=await gorselSikistir(file);
+  $("preview").src=secilenGorsel;
+  $("preview").style.display="block";
+  $("adminStatus").textContent="Önizleme hazır.";
+ }catch(err){$("adminStatus").textContent=err.message}
 });
-
 $("publishBtn").addEventListener("click",async()=>{
-if(!secilenGorsel){$("adminStatus").textContent="Önce bir görsel seç.";return}
-const dakika=Number($("adDuration").value);
-const veri={
-imageData:secilenGorsel,
-publishedAt:Date.now(),
-expiresAt:Date.now()+dakika*60000,
-durationMinutes:dakika
-};
-$("publishBtn").disabled=true;
-$("adminStatus").textContent="Yayınlanıyor...";
-try{
-await set(adRef,veri);
-$("adminStatus").textContent="Reklam yayınlandı.";
-}catch(err){
-$("adminStatus").textContent="Yayınlanamadı: "+err.message+" — Firebase yazma izinleri kontrol edilmeli.";
-}finally{$("publishBtn").disabled=false}
+ if(!secilenGorsel){$("adminStatus").textContent="Önce reklam görseli seç.";return}
+ const dakika=Number($("adDuration").value);
+ $("publishBtn").disabled=true;
+ $("adminStatus").textContent="Yayınlanıyor...";
+ try{
+  await set(adRef,{
+   imageData:secilenGorsel,
+   publishedAt:Date.now(),
+   expiresAt:Date.now()+dakika*60000,
+   durationMinutes:dakika
+  });
+  $("adminStatus").textContent="Reklam yayınlandı.";
+ }catch(err){
+  $("adminStatus").textContent="Yayınlanamadı: "+err.message+" — Firebase yazma izinleri kontrol edilmeli.";
+ }finally{$("publishBtn").disabled=false}
 });
-
 $("removeBtn").addEventListener("click",async()=>{
-if(!confirm("Reklam kaldırılsın mı?"))return;
-try{await remove(adRef);$("adminStatus").textContent="Reklam kaldırıldı."}
-catch(err){$("adminStatus").textContent="Kaldırılamadı: "+err.message}
+ if(!confirm("Reklam kaldırılsın mı?"))return;
+ try{
+  await remove(adRef);
+  $("adminStatus").textContent="Reklam kaldırıldı.";
+ }catch(err){$("adminStatus").textContent="Kaldırılamadı: "+err.message}
 });
-
 $("closeAdminBtn").addEventListener("click",()=>{
-$("adminPanel").style.display="none";
-history.replaceState(null,"",location.pathname);
+ $("adminPanel").style.display="none";
+ history.replaceState(null,"",location.pathname);
 });
-
-setInterval(()=>{
-if(sonReklam?.expiresAt&&Date.now()>=Number(sonReklam.expiresAt))reklamGoster(null);
-},15000);
 </script>
 </body>
 </html>
