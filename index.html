@@ -9,7 +9,6 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#d4af37;--yellow:#ffd700}
 
-/* SAYFA SABİT: AŞAĞI-YUKARI KAYDIRMA KAPALI */
 html,body{
   width:100%;
   height:100%;
@@ -103,7 +102,7 @@ body>*{position:relative}
   flex-shrink:0;
 }
 
-/* FİYAT TABLOSU */
+/* FIYAT TABLOSU: MEVCUT YAPI KORUNDU */
 table{
   width:100%;
   flex:0 0 auto;
@@ -137,15 +136,15 @@ td[id$="Alis"]{color:#00ff00}
 td[id$="Satis"]{color:#ff3030}
 .gold{color:var(--yellow)}
 
-/* REKLAM ALANI: EKRANDA KALAN BOŞLUĞU KULLANIR */
+/* REKLAM: TABLONUN HEMEN ALTINDA, KALAN ALANA UYUM SAGLAR */
 #adSpace{
   width:100%;
-  flex:1 1 auto;
+  flex:1 1 0;
   min-height:0;
-  height:auto;
-  margin:8px auto 0;
+  height:0;
+  margin:4px auto 0;
   display:flex;
-  align-items:center;
+  align-items:flex-start;
   justify-content:center;
   overflow:hidden;
   background:#000;
@@ -158,9 +157,10 @@ td[id$="Satis"]{color:#ff3030}
   max-width:100%;
   max-height:100%;
   object-fit:contain;
+  object-position:center top;
 }
 
-/* ALT BANT EKRANIN ALTINA SABİT */
+/* ALT BANT */
 .footer{
   position:fixed;
   z-index:20;
@@ -190,7 +190,7 @@ td[id$="Satis"]{color:#ff3030}
   to{transform:translateX(-100%)}
 }
 
-/* GİRİŞ EKRANI */
+/* GIRIS EKRANI */
 #loginScreen{
   position:fixed;
   inset:0;
@@ -253,6 +253,7 @@ td[id$="Satis"]{color:#ff3030}
 }
 
 .login-card .btn{width:100%}
+
 #loginError{
   display:none;
   color:#ff4d4d;
@@ -261,7 +262,7 @@ td[id$="Satis"]{color:#ff3030}
   font-weight:bold;
 }
 
-/* REKLAM YÖNETİM PANELİ */
+/* AYRI REKLAM YONETIMI */
 #adminPanel{
   display:none;
   position:fixed;
@@ -345,7 +346,7 @@ td[id$="Satis"]{color:#ff3030}
   display:none;
 }
 
-/* DAR EKRANLARDA TABLOYU SIKIŞTIR */
+/* KISA TELEFON EKRANLARI */
 @media(max-height:700px){
   .top{gap:5px;margin-bottom:4px}
   .box{padding:4px 2px}
@@ -353,7 +354,7 @@ td[id$="Satis"]{color:#ff3030}
   .sub{margin-bottom:4px}
   th{padding:3px}
   td{padding:2px 4px;font-size:clamp(11px,3vw,16px)}
-  #adSpace{margin-top:4px}
+  #adSpace{margin-top:3px}
 }
 
 @media(min-width:700px){
@@ -432,6 +433,7 @@ td[id$="Satis"]{color:#ff3030}
       <button class="btn" id="removeBtn">REKLAMI KALDIR</button>
       <button class="btn" id="closeAdminBtn">KAPAT</button>
     </div>
+
     <div id="adminStatus"></div>
   </div>
 </div>
@@ -466,7 +468,6 @@ function sayi(v){
 
 function yaz(id,v){
  if(!Number.isFinite(v))return;
-
  $(id).textContent=(id.includes("dolar")||id.includes("euro"))
  ?v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})
  :(Math.round(v/5)*5).toLocaleString("tr-TR");
@@ -476,7 +477,6 @@ function kar(k,t){
  return sayi(karlar?.[k]?.[t])||0;
 }
 
-/* MEVCUT CANLI FİYAT SİSTEMİ */
 async function canliYukle(){
  try{
   const r=await fetch("/api/sukob",{cache:"no-store"});
@@ -534,7 +534,6 @@ onValue(ref(db,"karlar"),s=>{
 canliYukle();
 setInterval(canliYukle,60000);
 
-/* SAAT VE TARİH */
 function saatTarih(){
  const n=new Date();
 
@@ -557,7 +556,6 @@ function saatTarih(){
 saatTarih();
 setInterval(saatTarih,1000);
 
-/* GİRİŞ */
 const dogruSifre="1532467980Bb.";
 
 function girisYap(){
@@ -580,7 +578,6 @@ if(localStorage.getItem("akinlar_giris")==="1"){
  $("loginScreen").style.display="none";
 }
 
-/* REKLAM SİSTEMİ */
 const adRef=ref(db,"reklam/current");
 const adminMode=new URLSearchParams(location.search).get("yonetim")==="reklam";
 
@@ -614,7 +611,6 @@ setInterval(()=>{
  }
 },10000);
 
-/* REKLAM YÖNETİMİ */
 if(adminMode){
  const parola=prompt("Reklam yönetimi şifresi:");
 
@@ -626,7 +622,6 @@ if(adminMode){
  }
 }
 
-/* GÖRSEL BOYUTLANDIRMA */
 function gorselSikistir(file){
  return new Promise((resolve,reject)=>{
   const reader=new FileReader();
@@ -678,7 +673,6 @@ $("adFile").addEventListener("change",async e=>{
  }
 });
 
-/* REKLAMI YAYINLA */
 $("publishBtn").addEventListener("click",async()=>{
  if(!secilenGorsel){
   $("adminStatus").textContent="Önce reklam görseli seç.";
@@ -709,7 +703,6 @@ $("publishBtn").addEventListener("click",async()=>{
  }
 });
 
-/* REKLAMI KALDIR */
 $("removeBtn").addEventListener("click",async()=>{
  if(!confirm("Reklam kaldırılsın mı?"))return;
 
