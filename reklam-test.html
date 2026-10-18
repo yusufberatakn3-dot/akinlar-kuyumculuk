@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Akınlar Kuyumculuk - Reklam Testi</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;font-family:Arial,sans-serif;background:#000;color:#fff}
+body{overflow:hidden}
+#ekran{height:100dvh;display:flex;flex-direction:column;padding:7px;gap:5px}
+.ust{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:5px}
+.kutu{border:2px solid #d4af37;border-radius:5px;text-align:center;padding:7px 2px;font-size:clamp(10px,3vw,15px);font-weight:bold}
+.logo{text-align:center;color:#ffd700;font-size:clamp(21px,5.8vw,34px);font-weight:900;white-space:nowrap;margin:4px 0}
+.baslik{text-align:center;font-size:12px;letter-spacing:3px;margin-bottom:4px}
+.tablo{flex:1;min-height:0}
+table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+th{background:linear-gradient(#ffe36a,#caa000);color:#000;font-size:clamp(12px,3.4vw,19px);padding:3px}
+td{border:1px solid #594a15;padding:2px 4px;font-weight:bold;font-size:clamp(10px,3vw,17px);white-space:nowrap;overflow:hidden}
+td:first-child{width:40%}
+td:not(:first-child){text-align:center}
+.alis{color:#00ff00}.satis{color:#ff5555}
+.reklam{height:20%;min-height:0;border:1px solid #333;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.reklam img{width:100%;height:100%;object-fit:contain;display:none}
+.alt{height:34px;flex-shrink:0;overflow:hidden;border-top:2px solid #d4af37;color:#ffd700;display:flex;align-items:center;white-space:nowrap;font-size:13px;font-weight:bold}
+.kayan{padding-left:100%;animation:kay 18s linear infinite}
+@keyframes kay{to{transform:translateX(-100%)}}
+.yonet{position:fixed;right:8px;bottom:43px;z-index:3;background:#111;color:#ffd700;border:1px solid #d4af37;padding:9px;border-radius:7px;font-weight:bold;font-size:11px}
+#panel{display:none;position:fixed;inset:0;z-index:10;background:#080808;overflow:auto;padding:15px}
+.ic{max-width:480px;margin:auto;border:1px solid #d4af37;border-radius:10px;padding:15px;background:#111}
+h2{margin:0 0 8px;color:#ffd700}
+.aciklama{font-size:13px;color:#ccc;line-height:1.5}
+label{display:block;margin-top:13px;font-size:13px;font-weight:bold}
+input,select{width:100%;padding:11px;margin-top:5px;background:#050505;color:white;border:1px solid #66551b;border-radius:6px}
+#onizleme{margin-top:12px;width:100%;height:180px;background:#000;border:1px dashed #777;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#onizleme img{max-width:100%;max-height:100%;object-fit:contain}
+.dugme{padding:11px 9px;border:0;border-radius:6px;font-weight:bold;margin:10px 4px 0 0;background:#d4af37;color:#000}
+.kapat{background:#333;color:#fff}
+#mesaj{font-size:13px;line-height:1.5;color:#8fffdc;margin-top:10px}
+</style>
+</head>
+<body>
+<div id="ekran">
+  <div class="ust">
+    <div class="kutu" id="saat">00:00:00</div>
+    <div class="kutu" id="tarih">--</div>
+    <div class="kutu">Son Güncelleme<br><span>TEST</span></div>
+  </div>
+  <div>
+    <div class="logo">AKINLAR KUYUMCULUK</div>
+    <div class="baslik">ALTIN &amp; DÖVİZ FİYATLARI</div>
+  </div>
+  <div class="tablo">
+    <table>
+      <thead><tr><th>ÜRÜN</th><th>ALIŞ</th><th>SATIŞ</th></tr></thead>
+      <tbody>
+        <tr><td>Has Altın</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>22 Ayar Gram</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Eski Çeyrek</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Yeni Çeyrek</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Eski Yarım</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Yeni Yarım</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Eski Tam</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Yeni Tam</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Dolar</td><td class="alis">—</td><td class="satis">—</td></tr>
+        <tr><td>Euro</td><td class="alis">—</td><td class="satis">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="reklam"><img id="canliReklam" alt="Reklam"></div>
+  <div class="alt"><div class="kayan" id="kayanYazi">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95</div></div>
+</div>
+
+<button class="yonet" onclick="panelAc()">REKLAM YÖNETİMİ</button>
+
+<div id="panel">
+<div class="ic">
+<h2>Reklam Yönetimi</h2>
+<p class="aciklama">Fotoğraf seçmek tek başına yayınlamaz. Önce önizle, ardından onay ver.</p>
+<label>Reklam fotoğrafı</label>
+<input type="file" id="dosya" accept="image/*">
+<div id="onizleme">Henüz fotoğraf seçilmedi.</div>
+<div id="mesaj">Bir fotoğraf seç.</div>
+<label>Yayın süresi</label>
+<select id="sure">
+<option value="1">1 saat</option>
+<option value="4">4 saat</option>
+<option value="8">8 saat</option>
+<option value="12">12 saat</option>
+<option value="24">24 saat</option>
+</select>
+<label>Kayan yazı mesajı (isteğe bağlı)</label>
+<input id="reklamMesaji" maxlength="200" placeholder="Reklam mesajı">
+<button class="dugme" id="yayınla" onclick="yayınla()" disabled>ONAYLIYORUM — YAYINLA</button>
+<button class="dugme" onclick="reklamiKaldir()">REKLAMI KALDIR</button>
+<button class="dugme kapat" onclick="panelKapat()">FİYAT EKRANINA DÖN</button>
+<p class="aciklama">Bu testte fiyatlar örnektir ve gerçek fiyat API'sine bağlı değildir.</p>
+</div>
+</div>
+
+<script>
+let secilenFoto="",bitisZamani=0,sureSayaci=null;
+function saatGuncelle(){
+ const d=new Date();
+ document.getElementById("saat").textContent=d.toLocaleTimeString("tr-TR");
+ document.getElementById("tarih").textContent=d.toLocaleDateString("tr-TR");
+}
+saatGuncelle();setInterval(saatGuncelle,1000);
+function panelAc(){document.getElementById("panel").style.display="block"}
+function panelKapat(){document.getElementById("panel").style.display="none"}
+document.getElementById("dosya").addEventListener("change",function(){
+ const f=this.files&&this.files[0];
+ secilenFoto="";document.getElementById("yayınla").disabled=true;
+ const alan=document.getElementById("onizleme");alan.replaceChildren();
+ if(!f){alan.textContent="Fotoğraf seçilmedi.";return}
+ if(!f.type.startsWith("image/")){alan.textContent="Görüntü dosyası seç.";return}
+ if(f.size>12*1024*1024){alan.textContent="Fotoğraf 12 MB'dan küçük olmalı.";return}
+ const r=new FileReader();
+ r.onload=function(e){
+  const img=new Image();
+  img.onload=function(){
+   secilenFoto=e.target.result;img.alt="Reklam önizlemesi";
+   alan.replaceChildren(img);
+   document.getElementById("mesaj").textContent="Fotoğraf: "+img.naturalWidth+" × "+img.naturalHeight+" piksel. Görsel esnetilmeyecek veya kırpılmayacak.";
+   document.getElementById("yayınla").disabled=false;
+  };
+  img.onerror=function(){alan.textContent="Fotoğraf açılamadı."};
+  img.src=e.target.result;
+ };
+ r.readAsDataURL(f);
+});
+function yayınla(){
+ if(!secilenFoto){alert("Önce fotoğraf seç.");return}
+ const saat=Number(document.getElementById("sure").value);
+ if(!confirm("Reklam "+saat+" saat yayınlansın mı?"))return;
+ const img=document.getElementById("canliReklam");
+ img.src=secilenFoto;img.style.display="block";
+ bitisZamani=Date.now()+saat*3600000;
+ const mesaj=document.getElementById("reklamMesaji").value.trim();
+ document.getElementById("kayanYazi").textContent=mesaj
+ ? "AKINLAR KUYUMCULUK • "+mesaj+" • TEL: 0531 734 68 80 • 0546 694 88 95"
+ : "AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95";
+ clearInterval(sureSayaci);
+ sureSayaci=setInterval(()=>{if(Date.now()>=bitisZamani)reklamiKaldir()},1000);
+ panelKapat();
+}
+function reklamiKaldir(){
+ clearInterval(sureSayaci);bitisZamani=0;
+ const img=document.getElementById("canliReklam");
+ img.removeAttribute("src");img.style.display="none";
+ document.getElementById("dosya").value="";
+ document.getElementById("reklamMesaji").value="";
+ document.getElementById("kayanYazi").textContent="AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95";
+ secilenFoto="";document.getElementById("yayınla").disabled=true;
+ document.getElementById("mesaj").textContent="Reklam kaldırıldı.";
+}
+</script>
+</body>
+</html>
