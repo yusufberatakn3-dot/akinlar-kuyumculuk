@@ -4,22 +4,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Akınlar Kuyumculuk</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--gold:#d4af37;--yellow:#ffd700}
-html,body{width:100%;min-height:100%;background:#000;color:#fff;font-family:Arial,sans-serif}
-body{padding:8px 6px 50px;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at top,#332900 0%,#050505 45%,#000 100%);z-index:0;pointer-events:none}
+
+/* SAYFA SABİT: AŞAĞI-YUKARI KAYDIRMA KAPALI */
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden!important;
+  overscroll-behavior:none;
+  background:#000;
+  color:#fff;
+  font-family:Arial,sans-serif;
+}
+
+body{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100vh;
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+  padding:8px 6px 42px;
+  overflow:hidden!important;
+  touch-action:pan-x;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle at top,#332900 0%,#050505 45%,#000 100%);
+  z-index:0;
+  pointer-events:none;
+}
+
 body>*{position:relative}
-.top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
-.box{min-width:0;border:2px solid var(--gold);border-radius:8px;padding:7px 3px;text-align:center;font-size:clamp(11px,3.1vw,16px);font-weight:bold;background:rgba(0,0,0,.8);overflow-wrap:anywhere}
-.logo{position:relative;overflow:hidden;text-align:center;color:var(--yellow);font-size:clamp(21px,5vw,34px);font-weight:900;white-space:nowrap;text-shadow:0 0 12px var(--yellow),0 0 28px #8a6d00;margin:10px 0 5px}
-.logo::after{content:"";position:absolute;top:0;left:-60%;width:45%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.85),transparent);animation:shine 5s infinite;pointer-events:none}
-@keyframes shine{0%{left:-60%}25%,100%{left:120%}}
-.sub{text-align:center;font-size:clamp(11px,3.1vw,16px);letter-spacing:clamp(2px,1vw,4px);font-weight:bold;margin-bottom:10px}
-table{width:100%;border-collapse:collapse;border:2px solid var(--gold);background:#020202;table-layout:fixed}
-th{background:linear-gradient(#ffe36a,#caa000);color:#000;font-size:clamp(15px,4vw,20px);padding:10px 3px}
-td{border:1px solid rgba(255,215,0,.28);padding:10px 6px;font-size:clamp(14px,3.6vw,18px);font-weight:bold;overflow-wrap:anywhere}
+
+.top{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:7px;
+  margin-bottom:8px;
+  flex-shrink:0;
+}
+
+.box{
+  min-width:0;
+  border:2px solid var(--gold);
+  border-radius:8px;
+  padding:7px 3px;
+  text-align:center;
+  font-size:clamp(11px,3.1vw,16px);
+  font-weight:bold;
+  background:rgba(0,0,0,.8);
+  overflow-wrap:anywhere;
+}
+
+.logo{
+  position:relative;
+  overflow:hidden;
+  text-align:center;
+  color:var(--yellow);
+  font-size:clamp(21px,5vw,34px);
+  font-weight:900;
+  white-space:nowrap;
+  text-shadow:0 0 12px var(--yellow),0 0 28px #8a6d00;
+  margin:8px 0 4px;
+  flex-shrink:0;
+}
+
+.logo::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:-60%;
+  width:45%;
+  height:100%;
+  background:linear-gradient(110deg,transparent,rgba(255,255,255,.85),transparent);
+  animation:shine 5s infinite;
+  pointer-events:none;
+}
+
+@keyframes shine{
+  0%{left:-60%}
+  25%,100%{left:120%}
+}
+
+.sub{
+  text-align:center;
+  font-size:clamp(11px,3.1vw,16px);
+  letter-spacing:clamp(2px,1vw,4px);
+  font-weight:bold;
+  margin-bottom:8px;
+  flex-shrink:0;
+}
+
+/* FİYAT TABLOSU */
+table{
+  width:100%;
+  flex:0 0 auto;
+  border-collapse:collapse;
+  border:2px solid var(--gold);
+  background:#020202;
+  table-layout:fixed;
+}
+
+th{
+  background:linear-gradient(#ffe36a,#caa000);
+  color:#000;
+  font-size:clamp(13px,3.5vw,20px);
+  padding:clamp(4px,0.8vh,10px) 3px;
+}
+
+td{
+  border:1px solid rgba(255,215,0,.28);
+  padding:clamp(3px,0.55vh,8px) 5px;
+  font-size:clamp(12px,3.2vw,18px);
+  line-height:1.05;
+  font-weight:bold;
+  overflow-wrap:anywhere;
+}
+
 th:first-child,td:first-child{width:47%}
 th:first-child{text-align:center}
 th:nth-child(2),th:nth-child(3){width:26.5%}
@@ -28,18 +137,20 @@ td[id$="Alis"]{color:#00ff00}
 td[id$="Satis"]{color:#ff3030}
 .gold{color:var(--yellow)}
 
-/* SABİT REKLAM ALANI: reklamın boyu değişince sayfa düzeni değişmesin */
+/* REKLAM ALANI: EKRANDA KALAN BOŞLUĞU KULLANIR */
 #adSpace{
   width:100%;
-  height:clamp(150px,26vh,270px);
+  flex:1 1 auto;
+  min-height:0;
+  height:auto;
   margin:8px auto 0;
   display:flex;
   align-items:center;
   justify-content:center;
   overflow:hidden;
   background:#000;
-  flex-shrink:0;
 }
+
 #adSpace img{
   display:block;
   width:100%;
@@ -49,7 +160,7 @@ td[id$="Satis"]{color:#ff3030}
   object-fit:contain;
 }
 
-/* Alt bant ekranın altında sabit */
+/* ALT BANT EKRANIN ALTINA SABİT */
 .footer{
   position:fixed;
   z-index:20;
@@ -67,65 +178,191 @@ td[id$="Satis"]{color:#ff3030}
   display:flex;
   align-items:center;
 }
-.marquee{display:inline-block;padding-left:100%;animation:marquee 18s linear infinite}
-@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-100%)}}
 
+.marquee{
+  display:inline-block;
+  padding-left:100%;
+  animation:marquee 18s linear infinite;
+}
+
+@keyframes marquee{
+  from{transform:translateX(0)}
+  to{transform:translateX(-100%)}
+}
+
+/* GİRİŞ EKRANI */
 #loginScreen{
-  position:fixed;inset:0;z-index:1000;
-  display:flex;align-items:center;justify-content:center;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   background:radial-gradient(circle at center,#2b2200 0%,#080808 45%,#000 100%);
-  padding:16px;font-family:Arial,sans-serif
+  padding:16px;
+  font-family:Arial,sans-serif;
 }
-.login-card{
-  width:100%;max-width:400px;padding:26px 20px;
-  background:linear-gradient(145deg,#111,#050505);
-  border:2px solid var(--gold);border-radius:16px;text-align:center;
-  box-shadow:0 0 35px rgba(212,175,55,.2)
-}
-.login-title{color:var(--yellow);font-size:clamp(22px,5vw,30px);font-weight:900;margin-bottom:8px;text-shadow:0 0 12px var(--yellow)}
-.login-sub{color:#aaa;font-size:12px;letter-spacing:2px;margin-bottom:24px}
-#passwordInput{
-  width:100%;padding:14px;border:1px solid var(--gold);border-radius:8px;
-  background:#050505;color:#fff;font-size:17px;text-align:center;margin:12px 0
-}
-.btn{
-  border:0;border-radius:9px;padding:13px 12px;
-  background:linear-gradient(#ffe36a,#caa000);color:#000;
-  font-size:15px;font-weight:900;cursor:pointer
-}
-.login-card .btn{width:100%}
-#loginError{display:none;color:#ff4d4d;margin-top:12px;font-size:14px;font-weight:bold}
 
+.login-card{
+  width:100%;
+  max-width:400px;
+  padding:26px 20px;
+  background:linear-gradient(145deg,#111,#050505);
+  border:2px solid var(--gold);
+  border-radius:16px;
+  text-align:center;
+  box-shadow:0 0 35px rgba(212,175,55,.2);
+}
+
+.login-title{
+  color:var(--yellow);
+  font-size:clamp(22px,5vw,30px);
+  font-weight:900;
+  margin-bottom:8px;
+  text-shadow:0 0 12px var(--yellow);
+}
+
+.login-sub{
+  color:#aaa;
+  font-size:12px;
+  letter-spacing:2px;
+  margin-bottom:24px;
+}
+
+#passwordInput{
+  width:100%;
+  padding:14px;
+  border:1px solid var(--gold);
+  border-radius:8px;
+  background:#050505;
+  color:#fff;
+  font-size:17px;
+  text-align:center;
+  margin:12px 0;
+}
+
+.btn{
+  border:0;
+  border-radius:9px;
+  padding:13px 12px;
+  background:linear-gradient(#ffe36a,#caa000);
+  color:#000;
+  font-size:15px;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.login-card .btn{width:100%}
+#loginError{
+  display:none;
+  color:#ff4d4d;
+  margin-top:12px;
+  font-size:14px;
+  font-weight:bold;
+}
+
+/* REKLAM YÖNETİM PANELİ */
 #adminPanel{
-  display:none;position:fixed;inset:0;z-index:2000;
-  background:#090909;color:white;overflow:auto;padding:16px
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  background:#090909;
+  color:white;
+  overflow:auto;
+  padding:16px;
+  overscroll-behavior:contain;
+  touch-action:pan-y;
 }
+
 .admin-card{
-  max-width:520px;margin:10px auto;padding:20px;
-  border:2px solid var(--gold);border-radius:12px;background:#111
+  max-width:520px;
+  margin:10px auto;
+  padding:20px;
+  border:2px solid var(--gold);
+  border-radius:12px;
+  background:#111;
 }
-.admin-card h2{color:var(--yellow);margin-bottom:12px;font-size:24px}
+
+.admin-card h2{
+  color:var(--yellow);
+  margin-bottom:12px;
+  font-size:24px;
+}
+
 .admin-card p{line-height:1.5}
-.admin-card label{display:block;margin:14px 0 6px;font-weight:bold}
+
+.admin-card label{
+  display:block;
+  margin:14px 0 6px;
+  font-weight:bold;
+}
+
 .admin-card input,.admin-card select{
-  width:100%;padding:12px;border-radius:7px;
-  border:1px solid #a88922;background:#050505;color:#fff;font-size:16px
+  width:100%;
+  padding:12px;
+  border-radius:7px;
+  border:1px solid #a88922;
+  background:#050505;
+  color:#fff;
+  font-size:16px;
 }
-#preview{max-width:100%;max-height:220px;display:none;margin:12px auto;object-fit:contain}
-.admin-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+
+#preview{
+  max-width:100%;
+  max-height:220px;
+  display:none;
+  margin:12px auto;
+  object-fit:contain;
+}
+
+.admin-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:16px;
+}
+
 .admin-actions .btn{flex:1;min-width:120px}
-#adminStatus{margin-top:12px;overflow-wrap:anywhere;font-weight:bold;line-height:1.5}
-#adminLauncher{
-  position:fixed;right:0;top:45%;z-index:500;
-  background:#111;color:var(--yellow);border:1px solid var(--gold);
-  border-radius:24px 0 0 24px;padding:12px;display:none
+
+#adminStatus{
+  margin-top:12px;
+  overflow-wrap:anywhere;
+  font-weight:bold;
+  line-height:1.5;
 }
+
+#adminLauncher{
+  position:fixed;
+  right:0;
+  top:45%;
+  z-index:500;
+  background:#111;
+  color:var(--yellow);
+  border:1px solid var(--gold);
+  border-radius:24px 0 0 24px;
+  padding:12px;
+  display:none;
+}
+
+/* DAR EKRANLARDA TABLOYU SIKIŞTIR */
+@media(max-height:700px){
+  .top{gap:5px;margin-bottom:4px}
+  .box{padding:4px 2px}
+  .logo{margin:4px 0 2px;font-size:clamp(19px,4.8vw,30px)}
+  .sub{margin-bottom:4px}
+  th{padding:3px}
+  td{padding:2px 4px;font-size:clamp(11px,3vw,16px)}
+  #adSpace{margin-top:4px}
+}
+
 @media(min-width:700px){
-  body{max-width:1100px;margin:auto}
-  td{padding:12px 10px}
+  body{max-width:1100px;margin:0 auto}
+  td{padding:clamp(4px,0.6vh,9px) 10px}
 }
 </style>
 </head>
+
 <body>
 
 <div id="loginScreen">
@@ -174,9 +411,11 @@ td[id$="Satis"]{color:#ff3030}
   <div class="admin-card">
     <h2>Akınlar Kuyumculuk — Reklam Yönetimi</h2>
     <p>Görseli seç, süreyi belirle ve yayınla.</p>
+
     <label for="adFile">Reklam görseli</label>
     <input id="adFile" type="file" accept="image/*">
     <img id="preview" alt="Reklam önizlemesi">
+
     <label for="adDuration">Yayın süresi</label>
     <select id="adDuration">
       <option value="15">15 dakika</option>
@@ -187,6 +426,7 @@ td[id$="Satis"]{color:#ff3030}
       <option value="720">12 saat</option>
       <option value="1440">24 saat</option>
     </select>
+
     <div class="admin-actions">
       <button class="btn" id="publishBtn">YAYINLA</button>
       <button class="btn" id="removeBtn">REKLAMI KALDIR</button>
@@ -213,6 +453,7 @@ const firebaseConfig={
 const app=initializeApp(firebaseConfig);
 const db=getDatabase(app);
 const $=id=>document.getElementById(id);
+
 let karlar={},secilenGorsel=null,sonReklam=null;
 
 function sayi(v){
@@ -222,58 +463,103 @@ function sayi(v){
  const n=Number(s.replace(",","."));
  return Number.isFinite(n)?n:null;
 }
+
 function yaz(id,v){
  if(!Number.isFinite(v))return;
+
  $(id).textContent=(id.includes("dolar")||id.includes("euro"))
  ?v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})
  :(Math.round(v/5)*5).toLocaleString("tr-TR");
 }
-function kar(k,t){return sayi(karlar?.[k]?.[t])||0}
 
+function kar(k,t){
+ return sayi(karlar?.[k]?.[t])||0;
+}
+
+/* MEVCUT CANLI FİYAT SİSTEMİ */
 async function canliYukle(){
  try{
   const r=await fetch("/api/sukob",{cache:"no-store"});
   if(!r.ok)throw Error("HTTP "+r.status);
+
   const d=await r.json();
+
   const eslesme={
-   hasAltin:"hasAltin",ayar22:"ayar22",
-   ceyrekEski:"eskiCeyrek",ceyrekYeni:"yeniCeyrek",
-   yarimEski:"eskiYarim",yarimYeni:"yeniYarim",
-   tamEski:"eskiTam",tamYeni:"yeniTam",
-   dolar:"dolar",euro:"euro"
+   hasAltin:"hasAltin",
+   ayar22:"ayar22",
+   ceyrekEski:"eskiCeyrek",
+   ceyrekYeni:"yeniCeyrek",
+   yarimEski:"eskiYarim",
+   yarimYeni:"yeniYarim",
+   tamEski:"eskiTam",
+   tamYeni:"yeniTam",
+   dolar:"dolar",
+   euro:"euro"
   };
+
   for(const k of Object.keys(eslesme)){
    const item=d[eslesme[k]];
    if(!item)continue;
-   const a=sayi(item.buyPrice),s=sayi(item.sellPrice);
+
+   const a=sayi(item.buyPrice);
+   const s=sayi(item.sellPrice);
+
    if(a===null||s===null)continue;
+
    yaz(k+"Alis",a+kar(k,"alis"));
    yaz(k+"Satis",s+kar(k,"satis"));
   }
+
   $("sonGuncelleme").textContent=new Intl.DateTimeFormat("tr-TR",{
-   timeZone:"Europe/Istanbul",day:"2-digit",month:"2-digit",year:"numeric",
-   hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+   timeZone:"Europe/Istanbul",
+   day:"2-digit",
+   month:"2-digit",
+   year:"numeric",
+   hour:"2-digit",
+   minute:"2-digit",
+   second:"2-digit",
+   hour12:false
   }).format(new Date());
- }catch(e){console.error("Fiyatlar yüklenemedi:",e)}
+
+ }catch(e){
+  console.error("Fiyatlar yüklenemedi:",e);
+ }
 }
-onValue(ref(db,"karlar"),s=>{karlar=s.val()||{};canliYukle()});
+
+onValue(ref(db,"karlar"),s=>{
+ karlar=s.val()||{};
+ canliYukle();
+});
+
 canliYukle();
 setInterval(canliYukle,60000);
 
+/* SAAT VE TARİH */
 function saatTarih(){
  const n=new Date();
+
  $("saat").textContent=new Intl.DateTimeFormat("tr-TR",{
-  timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false
+  timeZone:"Europe/Istanbul",
+  hour:"2-digit",
+  minute:"2-digit",
+  second:"2-digit",
+  hour12:false
  }).format(n);
+
  $("tarih").textContent=new Intl.DateTimeFormat("tr-TR",{
-  timeZone:"Europe/Istanbul",day:"2-digit",month:"long",year:"numeric"
+  timeZone:"Europe/Istanbul",
+  day:"2-digit",
+  month:"long",
+  year:"numeric"
  }).format(n);
 }
+
 saatTarih();
 setInterval(saatTarih,1000);
 
-/* Fiyat ekranı girişi */
+/* GİRİŞ */
 const dogruSifre="1532467980Bb.";
+
 function girisYap(){
  if($("passwordInput").value.trim()===dogruSifre){
   $("loginScreen").style.display="none";
@@ -283,39 +569,55 @@ function girisYap(){
   $("loginError").style.display="block";
  }
 }
-$("loginBtn").addEventListener("click",girisYap);
-$("passwordInput").addEventListener("keydown",e=>{if(e.key==="Enter")girisYap()});
-if(localStorage.getItem("akinlar_giris")==="1")$("loginScreen").style.display="none";
 
-/* Reklam */
+$("loginBtn").addEventListener("click",girisYap);
+
+$("passwordInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter")girisYap();
+});
+
+if(localStorage.getItem("akinlar_giris")==="1"){
+ $("loginScreen").style.display="none";
+}
+
+/* REKLAM SİSTEMİ */
 const adRef=ref(db,"reklam/current");
 const adminMode=new URLSearchParams(location.search).get("yonetim")==="reklam";
 
 function reklamGoster(data){
  const area=$("adSpace");
+
  if(!data?.imageData||!data.expiresAt||Date.now()>=Number(data.expiresAt)){
   area.replaceChildren();
   return;
  }
+
  const img=document.createElement("img");
  img.src=data.imageData;
  img.alt="Akınlar Kuyumculuk reklamı";
  area.replaceChildren(img);
 }
+
 onValue(adRef,s=>{
  sonReklam=s.val();
  reklamGoster(sonReklam);
 },e=>{
  console.error(e);
- if(adminMode)$("adminStatus").textContent="Reklam okunamadı: "+e.message;
+ if(adminMode){
+  $("adminStatus").textContent="Reklam okunamadı: "+e.message;
+ }
 });
+
 setInterval(()=>{
- if(sonReklam?.expiresAt&&Date.now()>=Number(sonReklam.expiresAt))reklamGoster(null);
+ if(sonReklam?.expiresAt&&Date.now()>=Number(sonReklam.expiresAt)){
+  reklamGoster(null);
+ }
 },10000);
 
-/* Yönetim ekranı sadece URL parametresiyle istenir */
+/* REKLAM YÖNETİMİ */
 if(adminMode){
  const parola=prompt("Reklam yönetimi şifresi:");
+
  if(parola===dogruSifre){
   $("adminPanel").style.display="block";
  }else{
@@ -324,44 +626,70 @@ if(adminMode){
  }
 }
 
+/* GÖRSEL BOYUTLANDIRMA */
 function gorselSikistir(file){
  return new Promise((resolve,reject)=>{
   const reader=new FileReader();
+
   reader.onerror=()=>reject(Error("Dosya okunamadı."));
+
   reader.onload=()=>{
    const img=new Image();
+
    img.onerror=()=>reject(Error("Görsel açılamadı."));
+
    img.onload=()=>{
     const scale=Math.min(1,1000/Math.max(img.width,img.height));
+
     const canvas=document.createElement("canvas");
     canvas.width=Math.max(1,Math.round(img.width*scale));
     canvas.height=Math.max(1,Math.round(img.height*scale));
+
     const ctx=canvas.getContext("2d");
     ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
     const data=canvas.toDataURL("image/jpeg",0.65);
-    if(data.length>850000)reject(Error("Görsel çok büyük. Daha küçük görsel seç."));
-    else resolve(data);
+
+    if(data.length>850000){
+     reject(Error("Görsel çok büyük. Daha küçük görsel seç."));
+    }else{
+     resolve(data);
+    }
    };
+
    img.src=reader.result;
   };
+
   reader.readAsDataURL(file);
  });
 }
+
 $("adFile").addEventListener("change",async e=>{
  const file=e.target.files?.[0];
  if(!file)return;
+
  try{
   secilenGorsel=await gorselSikistir(file);
   $("preview").src=secilenGorsel;
   $("preview").style.display="block";
   $("adminStatus").textContent="Önizleme hazır.";
- }catch(err){$("adminStatus").textContent=err.message}
+ }catch(err){
+  $("adminStatus").textContent=err.message;
+ }
 });
+
+/* REKLAMI YAYINLA */
 $("publishBtn").addEventListener("click",async()=>{
- if(!secilenGorsel){$("adminStatus").textContent="Önce reklam görseli seç.";return}
+ if(!secilenGorsel){
+  $("adminStatus").textContent="Önce reklam görseli seç.";
+  return;
+ }
+
  const dakika=Number($("adDuration").value);
+
  $("publishBtn").disabled=true;
  $("adminStatus").textContent="Yayınlanıyor...";
+
  try{
   await set(adRef,{
    imageData:secilenGorsel,
@@ -369,22 +697,35 @@ $("publishBtn").addEventListener("click",async()=>{
    expiresAt:Date.now()+dakika*60000,
    durationMinutes:dakika
   });
+
   $("adminStatus").textContent="Reklam yayınlandı.";
+
  }catch(err){
-  $("adminStatus").textContent="Yayınlanamadı: "+err.message+" — Firebase yazma izinleri kontrol edilmeli.";
- }finally{$("publishBtn").disabled=false}
+  $("adminStatus").textContent=
+   "Yayınlanamadı: "+err.message+
+   " — Firebase yazma izinleri kontrol edilmeli.";
+ }finally{
+  $("publishBtn").disabled=false;
+ }
 });
+
+/* REKLAMI KALDIR */
 $("removeBtn").addEventListener("click",async()=>{
  if(!confirm("Reklam kaldırılsın mı?"))return;
+
  try{
   await remove(adRef);
   $("adminStatus").textContent="Reklam kaldırıldı.";
- }catch(err){$("adminStatus").textContent="Kaldırılamadı: "+err.message}
+ }catch(err){
+  $("adminStatus").textContent="Kaldırılamadı: "+err.message;
+ }
 });
+
 $("closeAdminBtn").addEventListener("click",()=>{
  $("adminPanel").style.display="none";
  history.replaceState(null,"",location.pathname);
 });
 </script>
+
 </body>
 </html>
