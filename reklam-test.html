@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
 <title>Akınlar Kuyumculuk</title>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;min-height:100%;background:#000;color:#fff;font-family:Arial,sans-serif}
@@ -14,12 +15,13 @@ body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle 
 .top{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
 .box{border:2px solid #d4af37;border-radius:8px;padding:9px 4px;text-align:center;font-size:clamp(12px,2.6vw,22px);font-weight:bold;background:rgba(0,0,0,.6);overflow:hidden;min-height:68px;display:flex;align-items:center;justify-content:center}
 .box:last-child{display:block;line-height:1.25}
-.logo{position:relative;overflow:hidden;text-align:center;color:#ffd700;font-size:clamp(22px,5vw,40px);font-weight:900;white-space:nowrap;text-shadow:0 0 6px #ffd700,0 0 14px #ffd700,0 0 28px #8a6d00;margin:12px 0 5px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.18),transparent)}
-.logo:before{content:"";position:absolute;top:-35%;bottom:-35%;left:-50%;width:36%;background:linear-gradient(90deg,transparent,rgba(255,235,100,.8),rgba(255,255,220,.98),rgba(255,215,0,.3),transparent);filter:blur(5px);transform:skewX(-20deg);animation:goldSweep 4s ease-in-out infinite;pointer-events:none}
+.logo{position:relative;overflow:hidden;text-align:center;color:#ffd700;font-size:clamp(22px,5vw,40px);font-weight:900;white-space:nowrap;text-shadow:0 0 6px #ffd700,0 0 14px #ffd700,0 0 28px #8a6d00;margin:12px 0 5px}
+.logo:before{content:"";position:absolute;top:-35%;bottom:-35%;left:-50%;width:36%;background:linear-gradient(90deg,transparent,rgba(255,235,100,.8),rgba(255,255,220,.98),rgba(255,215,0,.3),transparent);filter:blur(5px);transform:skewX(-20deg);animation goldSweep 4s ease-in-out infinite;pointer-events:none}
 @keyframes goldSweep{0%,15%{left:-50%;opacity:0}25%{opacity:1}70%{left:120%;opacity:.9}80%,100%{left:120%;opacity:0}}
 .sub{text-align:center;font-size:clamp(11px,2vw,18px);letter-spacing:clamp(2px,.6vw,5px);font-weight:bold;margin-bottom:10px}
 table{width:100%;border-collapse:collapse;border:2px solid #d4af37;background:#020202;table-layout:fixed}
-col.product{width:46%}col.price{width:27%}
+col.product{width:46%}
+col.price{width:27%}
 th{background:linear-gradient(#ffe36a,#caa000);color:#000;font-size:clamp(15px,3.2vw,30px);padding:10px 3px}
 td{border:1px solid rgba(255,215,0,.28);padding:clamp(7px,1.6vw,12px) clamp(3px,1vw,10px);font-size:clamp(13px,2.8vw,24px);font-weight:bold;white-space:nowrap;overflow:hidden}
 td:first-child{letter-spacing:-.5px}
@@ -27,11 +29,15 @@ td:not(:first-child){text-align:center}
 td[id$="Alis"]{color:#00ff00}
 td[id$="Satis"]{color:#ff0000}
 .gold{color:#ffd700}
-.footer-space{height:clamp(65px,12vh,135px);margin-top:5px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000;border:1px solid rgba(212,175,55,.25)}
+
+/* Reklam alanı: fiyat tablosunun mevcut yerleşimini değiştirmez */
+.footer-space{height:clamp(65px,12vh,135px);margin-top:5px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000}
 #canliReklam{display:none;width:100%;height:100%;object-fit:contain;object-position:center}
+
 .footer{position:fixed;bottom:0;left:0;width:100%;height:42px;background:#000;border-top:2px solid #d4af37;color:#ffd700;font-size:clamp(14px,2.6vw,22px);font-weight:bold;white-space:nowrap;overflow:hidden;display:flex;align-items:center;z-index:3}
 .marquee{display:inline-block;padding-left:100%;animation:marquee 18s linear infinite}
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+
 #yonetim,#tamOnizleme{display:none;position:fixed;inset:0;z-index:10000;overflow:auto;padding:14px;background:#080808}
 .panel{width:100%;max-width:560px;margin:0 auto;padding:17px;border:1px solid #d4af37;border-radius:12px;background:#101010}
 .panel h2{color:#ffd700;margin-bottom:12px;font-size:27px}
@@ -47,17 +53,9 @@ td[id$="Satis"]{color:#ff0000}
 .dugme.sil{background:#681d1d;color:#fff}
 .dugme.ikincil{background:#222;color:#ffd700;border:1px solid #d4af37}
 body.yonetimAcik{overflow:hidden}
-.preview-top{max-width:1100px;margin:0 auto 12px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.preview-top h2{color:#ffd700}
 #previewCanvas{width:min(100%,1100px);margin:0 auto;padding:10px;background:#000;border:1px solid #d4af37}
-#previewCanvas .top{gap:6px}
-#previewCanvas .box{font-size:clamp(10px,1.6vw,20px);min-height:50px;padding:6px 2px}
-#previewCanvas .logo{font-size:clamp(18px,3.3vw,38px)}
-#previewCanvas .sub{font-size:clamp(9px,1.3vw,16px)}
-#previewCanvas th{font-size:clamp(12px,2.3vw,25px);padding:7px 3px}
-#previewCanvas td{font-size:clamp(10px,1.9vw,21px);padding:6px 3px}
-#previewCanvas .footer-space{height:clamp(65px,12vh,125px)}
 .preview-note{max-width:1100px;margin:10px auto;color:#aaa;font-size:13px;line-height:1.4}
+
 @media(max-width:380px){
  body{padding:6px 6px 48px}
  .top{gap:4px;margin-bottom:8px}
@@ -70,275 +68,423 @@ body.yonetimAcik{overflow:hidden}
  #yonetim,#tamOnizleme{padding:8px}
  .panel{padding:13px}
 }
-@media(prefers-reduced-motion:reduce){.logo:before,.marquee{animation:none}}
+@media(prefers-reduced-motion:reduce){
+ .logo:before,.marquee{animation:none}
+}
 </style>
 </head>
+
 <body>
 <div id="fiyatEkrani">
- <div class="top">
-  <div class="box" id="saat">00:00:00</div>
-  <div class="box" id="tarih">--</div>
-  <div class="box">Son Güncelleme<br><span id="sonGuncelleme">-</span></div>
- </div>
- <div class="logo">AKINLAR KUYUMCULUK</div>
- <div class="sub">ALTIN &amp; DÖVİZ FİYATLARI</div>
- <table>
-  <colgroup><col class="product"><col class="price"><col class="price"></colgroup>
-  <thead><tr><th>ÜRÜN</th><th>ALIŞ</th><th>SATIŞ</th></tr></thead>
-  <tbody>
-   <tr><td>Has Altın</td><td id="hasAltinAlis">-</td><td id="hasAltinSatis">-</td></tr>
-   <tr><td>22 Ayar Gram</td><td id="ayar22Alis">-</td><td id="ayar22Satis">-</td></tr>
-   <tr><td class="gold">Eski Çeyrek</td><td id="ceyrekEskiAlis">-</td><td id="ceyrekEskiSatis">-</td></tr>
-   <tr><td>Yeni Çeyrek</td><td id="ceyrekYeniAlis">-</td><td id="ceyrekYeniSatis">-</td></tr>
-   <tr><td class="gold">Eski Yarım</td><td id="yarimEskiAlis">-</td><td id="yarimEskiSatis">-</td></tr>
-   <tr><td>Yeni Yarım</td><td id="yarimYeniAlis">-</td><td id="yarimYeniSatis">-</td></tr>
-   <tr><td class="gold">Eski Tam</td><td id="tamEskiAlis">-</td><td id="tamEskiSatis">-</td></tr>
-   <tr><td>Yeni Tam</td><td id="tamYeniAlis">-</td><td id="tamYeniSatis">-</td></tr>
-   <tr><td>Dolar</td><td id="dolarAlis">-</td><td id="dolarSatis">-</td></tr>
-   <tr><td>Euro</td><td id="euroAlis">-</td><td id="euroSatis">-</td></tr>
-  </tbody>
- </table>
- <div class="footer-space"><img id="canliReklam" alt="Yayınlanan reklam"></div>
-</div>
-<div class="footer"><div class="marquee" id="kayanYazi">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95</div></div>
+  <div class="top">
+    <div class="box" id="saat">00:00:00</div>
+    <div class="box" id="tarih">--</div>
+    <div class="box">Son Güncelleme<br><span id="sonGuncelleme">-</span></div>
+  </div>
 
-<div id="yonetim"><div class="panel">
- <h2>Reklam Yönetimi</h2>
- <p>Fotoğrafı seç, fiyat ekranında önizle. Sen onaylamadan yayımlanmaz.</p>
- <label for="dosya">Reklam fotoğrafı</label>
- <input id="dosya" type="file" accept="image/*">
- <div id="onizleme">Henüz fotoğraf seçilmedi.</div>
- <div id="durum">Bir fotoğraf seçerek başla.</div>
- <label for="sure">Yayın süresi</label>
- <select id="sure">
-  <option value="1">1 saat</option>
-  <option value="4">4 saat</option>
-  <option value="8">8 saat</option>
-  <option value="12">12 saat</option>
-  <option value="24">24 saat</option>
- </select>
- <label for="reklamMesaji">Kayan yazıya eklenecek mesaj (isteğe bağlı)</label>
- <input id="reklamMesaji" maxlength="160" placeholder="Reklam mesajı">
- <button id="onizleButon" class="dugme ikincil" disabled onclick="tamEkranOnizle()">FİYAT EKRANINDA ÖNİZLE</button>
- <button id="onayla" class="dugme" disabled onclick="reklamiYayinla()">ONAYLIYORUM — YAYINLA</button>
- <button class="dugme sil" onclick="reklamiKaldir()">REKLAMI KALDIR</button>
- <button class="dugme kapat" onclick="yonetimKapat()">FİYAT EKRANINA DÖN</button>
- <p style="margin-top:14px">Bu test sürümü reklamı yalnızca açık tarayıcıda gösterir. Diğer cihazlara kalıcı yayın için sunucu bağlantısı gerekir.</p>
-</div></div>
+  <div class="logo">AKINLAR KUYUMCULUK</div>
+  <div class="sub">ALTIN &amp; DÖVİZ FİYATLARI</div>
+
+  <table>
+    <colgroup><col class="product"><col class="price"><col class="price"></colgroup>
+    <thead><tr><th>ÜRÜN</th><th>ALIŞ</th><th>SATIŞ</th></tr></thead>
+    <tbody>
+      <tr><td>Has Altın</td><td id="hasAltinAlis">-</td><td id="hasAltinSatis">-</td></tr>
+      <tr><td>22 Ayar Gram</td><td id="ayar22Alis">-</td><td id="ayar22Satis">-</td></tr>
+      <tr><td class="gold">Eski Çeyrek</td><td id="ceyrekEskiAlis">-</td><td id="ceyrekEskiSatis">-</td></tr>
+      <tr><td>Yeni Çeyrek</td><td id="ceyrekYeniAlis">-</td><td id="ceyrekYeniSatis">-</td></tr>
+      <tr><td class="gold">Eski Yarım</td><td id="yarimEskiAlis">-</td><td id="yarimEskiSatis">-</td></tr>
+      <tr><td>Yeni Yarım</td><td id="yarimYeniAlis">-</td><td id="yarimYeniSatis">-</td></tr>
+      <tr><td class="gold">Eski Tam</td><td id="tamEskiAlis">-</td><td id="tamEskiSatis">-</td></tr>
+      <tr><td>Yeni Tam</td><td id="tamYeniAlis">-</td><td id="tamYeniSatis">-</td></tr>
+      <tr><td>Dolar</td><td id="dolarAlis">-</td><td id="dolarSatis">-</td></tr>
+      <tr><td>Euro</td><td id="euroAlis">-</td><td id="euroSatis">-</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer-space">
+    <img id="canliReklam" alt="Yayınlanan reklam">
+  </div>
+</div>
+
+<div class="footer">
+  <div class="marquee" id="kayanYazi">AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95</div>
+</div>
+
+<div id="yonetim">
+  <div class="panel">
+    <h2>Reklam Yönetimi</h2>
+    <p>Fotoğrafı seç, önizle ve onaylayarak yayımla.</p>
+
+    <label for="dosya">Reklam fotoğrafı</label>
+    <input id="dosya" type="file" accept="image/*">
+
+    <div id="onizleme">Henüz fotoğraf seçilmedi.</div>
+    <div id="durum">Bir fotoğraf seçerek başla.</div>
+
+    <label for="sure">Yayın süresi</label>
+    <select id="sure">
+      <option value="1">1 saat</option>
+      <option value="4">4 saat</option>
+      <option value="8">8 saat</option>
+      <option value="12">12 saat</option>
+      <option value="24">24 saat</option>
+    </select>
+
+    <label for="reklamMesaji">Kayan yazı mesajı (isteğe bağlı)</label>
+    <input id="reklamMesaji" maxlength="160" placeholder="Reklam mesajı">
+
+    <button id="onizleButon" class="dugme ikincil" disabled>FİYAT EKRANINDA ÖNİZLE</button>
+    <button id="onayla" class="dugme" disabled>ONAYLIYORUM — YAYINLA</button>
+    <button id="kaldir" class="dugme sil">REKLAMI KALDIR</button>
+    <button id="kapat" class="dugme kapat">FİYAT EKRANINA DÖN</button>
+
+    <p style="margin-top:14px">Fotoğraf, Firebase veritabanının izinleri uygunsa kaydedilir ve bağlı ekranlarda gösterilir.</p>
+  </div>
+</div>
 
 <div id="tamOnizleme">
- <div class="preview-top">
-  <h2>Fiyat ekranında önizleme</h2>
-  <button class="dugme kapat" onclick="onizlemedenDon()">YÖNETİME DÖN</button>
- </div>
- <div id="previewCanvas"></div>
- <p class="preview-note">Bu önizleme fiyat ekranının yaklaşık görünümünü gösterir; TV tarayıcısında boyutlar farklı olabilir. Reklam henüz yayımlanmadı.</p>
- <div style="max-width:1100px;margin:auto">
-  <button class="dugme" onclick="onizlemedenYayinla()">ONAYLIYORUM — YAYINLA</button>
-  <button class="dugme kapat" onclick="onizlemedenDon()">GERİ DÖN</button>
- </div>
+  <div style="max-width:1100px;margin:0 auto 12px">
+    <h2 style="color:#ffd700">Fiyat ekranında önizleme</h2>
+    <button id="onizleGeri" class="dugme kapat">YÖNETİME DÖN</button>
+  </div>
+  <div id="previewCanvas"></div>
+  <p class="preview-note">Bu bir önizlemedir; TV'deki görüntü cihaz boyutuna göre farklılık gösterebilir.</p>
+  <div style="max-width:1100px;margin:auto">
+    <button id="onizleYayinla" class="dugme">ONAYLIYORUM — YAYINLA</button>
+    <button id="onizleGeri2" class="dugme kapat">GERİ DÖN</button>
+  </div>
 </div>
 
 <script>
 "use strict";
-const yonetimModu=new URLSearchParams(location.search).get("yonetim")==="1";
-let secilenFoto="",bitisZamani=0,sureSayaci=null;
-const dosya=document.getElementById("dosya");
-const onizleme=document.getElementById("onizleme");
-const durum=document.getElementById("durum");
-const onayla=document.getElementById("onayla");
-const onizleButon=document.getElementById("onizleButon");
+
+const yonetimModu = new URLSearchParams(location.search).get("yonetim") === "1";
+const varsayilanYazi = () =>
+  "AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95";
+
+const dosya = document.getElementById("dosya");
+const onizleme = document.getElementById("onizleme");
+const durum = document.getElementById("durum");
+const onayla = document.getElementById("onayla");
+const onizleButon = document.getElementById("onizleButon");
+
+let secilenFoto = "";
+let secilenFotoKucuk = "";
+let reklamMesaji = "";
 
 function saatGuncelle(){
- const d=new Date();
- document.getElementById("saat").textContent=new Intl.DateTimeFormat("tr-TR",{timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(d);
- document.getElementById("tarih").textContent=new Intl.DateTimeFormat("tr-TR",{timeZone:"Europe/Istanbul",day:"2-digit",month:"long",year:"numeric"}).format(d);
+  const d = new Date();
+  document.getElementById("saat").textContent =
+    new Intl.DateTimeFormat("tr-TR",{timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(d);
+  document.getElementById("tarih").textContent =
+    new Intl.DateTimeFormat("tr-TR",{timeZone:"Europe/Istanbul",day:"2-digit",month:"long",year:"numeric"}).format(d);
 }
 saatGuncelle();
 setInterval(saatGuncelle,1000);
 
 function yonetimAc(){
- document.getElementById("yonetim").style.display="block";
- document.body.classList.add("yonetimAcik");
+  document.getElementById("yonetim").style.display = "block";
+  document.body.classList.add("yonetimAcik");
 }
 function yonetimKapat(){
- document.getElementById("yonetim").style.display="none";
- document.getElementById("tamOnizleme").style.display="none";
- document.body.classList.remove("yonetimAcik");
- if(yonetimModu)history.replaceState(null,"",location.pathname);
+  document.getElementById("yonetim").style.display = "none";
+  document.getElementById("tamOnizleme").style.display = "none";
+  document.body.classList.remove("yonetimAcik");
+  if(yonetimModu) history.replaceState(null,"",location.pathname);
 }
-function varsayilanYazi(){
- return "AKINLAR KUYUMCULUK • ALTIN VE DÖVİZ FİYATLARI ANLIK OLARAK DEĞİŞEBİLİR • TEL: 0531 734 68 80 • 0546 694 88 95";
+document.getElementById("kapat").addEventListener("click",yonetimKapat);
+
+function dosyayiKucult(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onerror = ()=>reject(new Error("Fotoğraf okunamadı."));
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=>reject(new Error("Fotoğraf açılamadı."));
+      img.onload = ()=>{
+        const max = 1200;
+        const scale = Math.min(1,max/Math.max(img.width,img.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1,Math.round(img.width*scale));
+        canvas.height = Math.max(1,Math.round(img.height*scale));
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve(canvas.toDataURL("image/jpeg",0.72));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
-dosya.addEventListener("change",function(){
- const f=this.files&&this.files[0];
- secilenFoto="";
- onayla.disabled=true;
- onizleButon.disabled=true;
- onizleme.replaceChildren();
- if(!f){onizleme.textContent="Henüz fotoğraf seçilmedi.";durum.textContent="Bir fotoğraf seç.";return}
- if(!f.type.startsWith("image/")){onizleme.textContent="Geçerli bir resim dosyası seç.";durum.textContent="Dosya türü desteklenmiyor.";return}
- if(f.size>12*1024*1024){onizleme.textContent="Dosya çok büyük.";durum.textContent="Lütfen 12 MB'dan küçük fotoğraf seç.";return}
- const reader=new FileReader();
- reader.onload=e=>{
-  const img=new Image();
-  img.onload=()=>{
-   secilenFoto=e.target.result;
-   img.alt="Reklam önizlemesi";
-   onizleme.replaceChildren(img);
-   durum.textContent="Fotoğraf: "+img.naturalWidth+" × "+img.naturalHeight+" piksel. Görsel oranı korunur.";
-   if(img.naturalWidth<400||img.naturalHeight<300)durum.textContent+=" Uyarı: Yazılar küçük veya okunaksız olabilir.";
-   onayla.disabled=false;
-   onizleButon.disabled=false;
-  };
-  img.onerror=()=>{onizleme.textContent="Fotoğraf açılamadı.";durum.textContent="Başka fotoğraf dene."};
-  img.src=e.target.result;
- };
- reader.onerror=()=>durum.textContent="Fotoğraf okunamadı.";
- reader.readAsDataURL(f);
+dosya.addEventListener("change",async()=>{
+  secilenFoto = "";
+  secilenFotoKucuk = "";
+  onayla.disabled = true;
+  onizleButon.disabled = true;
+  onizleme.replaceChildren();
+
+  const file = dosya.files && dosya.files[0];
+  if(!file){
+    onizleme.textContent = "Henüz fotoğraf seçilmedi.";
+    return;
+  }
+  if(!file.type.startsWith("image/")){
+    durum.textContent = "Lütfen resim dosyası seç.";
+    return;
+  }
+
+  durum.textContent = "Fotoğraf hazırlanıyor...";
+  try{
+    secilenFoto = await dosyayiKucult(file);
+    secilenFotoKucuk = secilenFoto;
+    const img = document.createElement("img");
+    img.src = secilenFoto;
+    img.alt = "Reklam önizlemesi";
+    onizleme.replaceChildren(img);
+    durum.textContent = "Fotoğraf hazır. Önizleyebilirsin.";
+    onayla.disabled = false;
+    onizleButon.disabled = false;
+  }catch(e){
+    durum.textContent = e.message || "Fotoğraf hazırlanamadı.";
+  }
 });
 
-function kopyaEkran(src,mesaj){
- const source=document.getElementById("fiyatEkrani").cloneNode(true);
- source.id="previewClone";
- source.querySelector("#saat").textContent=document.getElementById("saat").textContent;
- source.querySelector("#tarih").textContent=document.getElementById("tarih").textContent;
- source.querySelector("#sonGuncelleme").textContent=document.getElementById("sonGuncelleme").textContent;
- const img=source.querySelector("#canliReklam");
- if(src){img.src=src;img.style.display="block"}else{img.removeAttribute("src");img.style.display="none"}
- const canvas=document.getElementById("previewCanvas");
- canvas.replaceChildren(source);
- source.style.width="100%";
- source.style.padding="0";
- source.style.background="#000";
- source.querySelectorAll(".box").forEach(el=>{el.style.minHeight="50px";el.style.padding="6px 2px"});
- source.querySelector(".logo").style.fontSize="clamp(18px,3.3vw,38px)";
- source.querySelector(".sub").style.fontSize="clamp(9px,1.4vw,16px)";
- source.querySelectorAll("th").forEach(el=>el.style.fontSize="clamp(12px,2.2vw,25px)");
- source.querySelectorAll("td").forEach(el=>{el.style.fontSize="clamp(10px,1.9vw,21px)";el.style.padding="6px 3px"});
- source.querySelector(".footer-space").style.height="clamp(65px,12vh,125px)";
- const footer=document.createElement("div");
- footer.className="footer";
- footer.style.position="relative";
- footer.style.marginTop="10px";
- footer.style.height="36px";
- footer.style.width="100%";
- footer.style.fontSize="clamp(10px,1.7vw,18px)";
- footer.style.border="1px solid #d4af37";
- const m=document.createElement("div");
- m.className="marquee";
- m.textContent=mesaj?("AKINLAR KUYUMCULUK • "+mesaj+" • TEL: 0531 734 68 80 • 0546 694 88 95"):varsayilanYazi();
- footer.appendChild(m);
- canvas.appendChild(footer);
+function reklamliOnizleme(){
+  const source = document.getElementById("fiyatEkrani").cloneNode(true);
+  const img = source.querySelector("#canliReklam");
+  img.src = secilenFotoKucuk;
+  img.style.display = "block";
+
+  const canvas = document.getElementById("previewCanvas");
+  canvas.replaceChildren(source);
+  source.style.width = "100%";
+  source.style.padding = "0";
+
+  const footer = document.createElement("div");
+  footer.className = "footer";
+  footer.style.position = "relative";
+  footer.style.marginTop = "8px";
+  footer.style.height = "36px";
+  const m = document.createElement("div");
+  m.className = "marquee";
+  m.textContent = reklamMesaji
+    ? "AKINLAR KUYUMCULUK • "+reklamMesaji+" • TEL: 0531 734 68 80 • 0546 694 88 95"
+    : varsayilanYazi();
+  footer.appendChild(m);
+  canvas.appendChild(footer);
 }
-function tamEkranOnizle(){
- if(!secilenFoto)return;
- kopyaEkran(secilenFoto,document.getElementById("reklamMesaji").value.trim());
- document.getElementById("yonetim").style.display="none";
- document.getElementById("tamOnizleme").style.display="block";
+
+document.getElementById("onizleButon").addEventListener("click",()=>{
+  if(!secilenFotoKucuk)return;
+  reklamMesaji = document.getElementById("reklamMesaji").value.trim();
+  reklamliOnizleme();
+  document.getElementById("yonetim").style.display = "none";
+  document.getElementById("tamOnizleme").style.display = "block";
+});
+
+function geriYonetim(){
+  document.getElementById("tamOnizleme").style.display = "none";
+  document.getElementById("yonetim").style.display = "block";
 }
-function onizlemedenDon(){
- document.getElementById("tamOnizleme").style.display="none";
- document.getElementById("yonetim").style.display="block";
+document.getElementById("onizleGeri").addEventListener("click",geriYonetim);
+document.getElementById("onizleGeri2").addEventListener("click",geriYonetim);
+
+async function reklamYayinla(){
+  if(!secilenFotoKucuk){
+    alert("Önce fotoğraf seç.");
+    return;
+  }
+
+  const hours = Number(document.getElementById("sure").value);
+  reklamMesaji = document.getElementById("reklamMesaji").value.trim();
+
+  if(!confirm("Reklam "+hours+" saat boyunca yayınlansın mı?"))return;
+
+  durum.textContent = "Firebase'e kaydediliyor...";
+  onayla.disabled = true;
+
+  try{
+    if(typeof window.kaliciReklamKaydet !== "function"){
+      throw new Error("Firebase bağlantısı hazır değil.");
+    }
+
+    await window.kaliciReklamKaydet({
+      imageData: secilenFotoKucuk,
+      message: reklamMesaji,
+      expiresAt: Date.now() + hours*60*60*1000,
+      updatedAt: Date.now()
+    });
+
+    durum.textContent = "Reklam kaydedildi.";
+    yonetimKapat();
+  }catch(e){
+    console.error(e);
+    durum.textContent = "Kayıt başarısız: " + (e.message || "Firebase izinlerini kontrol et.");
+    alert("Reklam kaydedilemedi. Firebase veritabanı yazma izni gerekiyor.\n\n"+(e.message || ""));
+  }finally{
+    onayla.disabled = false;
+  }
 }
-function onizlemedenYayinla(){reklamiYayinla(true)}
-function reklamiYayinla(onizlemedeOnay=false){
- if(!secilenFoto){alert("Önce fotoğraf seç.");return}
- const sure=Number(document.getElementById("sure").value);
- if(!onizlemedeOnay&&!confirm("Reklam "+sure+" saat boyunca bu test sayfasında gösterilsin mi?"))return;
- const img=document.getElementById("canliReklam");
- img.src=secilenFoto;
- img.style.display="block";
- bitisZamani=Date.now()+sure*3600000;
- const mesaj=document.getElementById("reklamMesaji").value.trim();
- document.getElementById("kayanYazi").textContent=mesaj?("AKINLAR KUYUMCULUK • "+mesaj+" • TEL: 0531 734 68 80 • 0546 694 88 95"):varsayilanYazi();
- clearInterval(sureSayaci);
- sureSayaci=setInterval(()=>{if(Date.now()>=bitisZamani)reklamiKaldir()},1000);
- durum.textContent="Reklam bu test sayfasında yayınlandı.";
- document.getElementById("tamOnizleme").style.display="none";
- yonetimKapat();
+document.getElementById("onayla").addEventListener("click",reklamYayinla);
+document.getElementById("onizleYayinla").addEventListener("click",reklamYayinla);
+
+async function reklamKaldir(){
+  if(!confirm("Yayındaki reklam kaldırılsın mı?"))return;
+  try{
+    if(typeof window.kaliciReklamKaldir !== "function"){
+      throw new Error("Firebase bağlantısı hazır değil.");
+    }
+    await window.kaliciReklamKaldir();
+    durum.textContent = "Reklam kaldırıldı.";
+  }catch(e){
+    alert("Reklam kaldırılamadı: "+(e.message || ""));
+  }
 }
-function reklamiKaldir(){
- clearInterval(sureSayaci);
- sureSayaci=null;
- bitisZamani=0;
- const img=document.getElementById("canliReklam");
- img.removeAttribute("src");
- img.style.display="none";
- secilenFoto="";
- dosya.value="";
- document.getElementById("reklamMesaji").value="";
- onizleme.replaceChildren();
- onizleme.textContent="Henüz fotoğraf seçilmedi.";
- onayla.disabled=true;
- onizleButon.disabled=true;
- document.getElementById("kayanYazi").textContent=varsayilanYazi();
- durum.textContent="Reklam kaldırıldı.";
-}
+document.getElementById("kaldir").addEventListener("click",reklamKaldir);
+
+if(yonetimModu) yonetimAc();
+
 document.addEventListener("keydown",e=>{
- if(e.key==="Escape"){
-  if(document.getElementById("tamOnizleme").style.display==="block")onizlemedenDon();
-  else if(document.getElementById("yonetim").style.display==="block")yonetimKapat();
- }
+  if(e.key==="Escape"){
+    if(document.getElementById("tamOnizleme").style.display==="block")geriYonetim();
+    else if(document.getElementById("yonetim").style.display==="block")yonetimKapat();
+  }
 });
-if(yonetimModu)yonetimAc();
 </script>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-import {getDatabase,ref,onValue} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
-const firebaseConfig={
- apiKey:"AIzaSyD3qdvibbWYv_8QfTr2QCfqrn0cPFj2xKw",
- authDomain:"akinlar-kuyumculuk.firebaseapp.com",
- databaseURL:"https://akinlar-kuyumculuk-default-rtdb.firebaseio.com",
- projectId:"akinlar-kuyumculuk",
- storageBucket:"akinlar-kuyumculuk.firebasestorage.app",
- messagingSenderId:"615116794335",
- appId:"1:615116794335:web:f6928756d3a38b1e6dfc6a"
+import {getDatabase,ref,onValue,set,remove} from "https://www.gstatic.com/firebasejs/12.14.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD3qdvibbWYv_8QfTr2QCfqrn0cPFj2xKw",
+  authDomain: "akinlar-kuyumculuk.firebaseapp.com",
+  databaseURL: "https://akinlar-kuyumculuk-default-rtdb.firebaseio.com",
+  projectId: "akinlar-kuyumculuk",
+  storageBucket: "akinlar-kuyumculuk.firebasestorage.app",
+  messagingSenderId: "615116794335",
+  appId: "1:615116794335:web:f6928756d3a38b1e6dfc6a"
 };
-let karlar={};
+
+let karlar = {};
 function sayi(v){
- if(typeof v==="number")return v;
- const s=String(v??"").trim();
- if(!s||s==="-")return null;
- const n=Number(s.replace(",","."));
- return Number.isFinite(n)?n:null;
+  if(typeof v === "number")return v;
+  const s = String(v ?? "").trim();
+  if(!s || s === "-")return null;
+  const n = Number(s.replace(",","."));
+  return Number.isFinite(n) ? n : null;
 }
 function yaz(id,n){
- const el=document.getElementById(id);
- if(!el||n===null||!Number.isFinite(n))return;
- if(id.startsWith("dolar")||id.startsWith("euro"))el.textContent=n.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
- else el.textContent=(Math.round(n/5)*5).toLocaleString("tr-TR");
+  const el = document.getElementById(id);
+  if(!el || n === null || !Number.isFinite(n))return;
+  if(id.startsWith("dolar") || id.startsWith("euro")){
+    el.textContent = n.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  }else{
+    el.textContent = (Math.round(n/5)*5).toLocaleString("tr-TR");
+  }
 }
-function kar(k,t){return sayi(karlar?.[k]?.[t])??0}
+function kar(k,t){
+  return sayi(karlar?.[k]?.[t]) ?? 0;
+}
+
 async function canliYukle(){
- try{
-  const r=await fetch("/api/sukob",{cache:"no-store"});
-  if(!r.ok)throw new Error("API HTTP "+r.status);
-  const d=await r.json();
-  const map={hasAltin:"hasAltin",ayar22:"ayar22",ceyrekEski:"eskiCeyrek",ceyrekYeni:"yeniCeyrek",yarimEski:"eskiYarim",yarimYeni:"yeniYarim",tamEski:"eskiTam",tamYeni:"yeniTam",dolar:"dolar",euro:"euro"};
-  Object.keys(map).forEach(k=>{
-   const item=d[map[k]];
-   if(!item)return;
-   const a=sayi(item.buyPrice),s=sayi(item.sellPrice);
-   if(a===null||s===null)return;
-   yaz(k+"Alis",a+kar(k,"alis"));
-   yaz(k+"Satis",s+kar(k,"satis"));
-  });
-  document.getElementById("sonGuncelleme").textContent=new Intl.DateTimeFormat("tr-TR",{timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date());
- }catch(e){
-  console.error("Canlı fiyat yüklenemedi:",e);
-  document.getElementById("sonGuncelleme").textContent="Bağlantı hatası";
- }
+  try{
+    const r = await fetch("/api/sukob",{cache:"no-store"});
+    if(!r.ok)throw new Error("API HTTP "+r.status);
+    const d = await r.json();
+    const map = {
+      hasAltin:"hasAltin",
+      ayar22:"ayar22",
+      ceyrekEski:"eskiCeyrek",
+      ceyrekYeni:"yeniCeyrek",
+      yarimEski:"eskiYarim",
+      yarimYeni:"yeniYarim",
+      tamEski:"eskiTam",
+      tamYeni:"yeniTam",
+      dolar:"dolar",
+      euro:"euro"
+    };
+    Object.keys(map).forEach(k=>{
+      const item = d[map[k]];
+      if(!item)return;
+      const a = sayi(item.buyPrice);
+      const s = sayi(item.sellPrice);
+      if(a === null || s === null)return;
+      yaz(k+"Alis",a+kar(k,"alis"));
+      yaz(k+"Satis",s+kar(k,"satis"));
+    });
+    document.getElementById("sonGuncelleme").textContent =
+      new Intl.DateTimeFormat("tr-TR",{timeZone:"Europe/Istanbul",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(new Date());
+  }catch(e){
+    console.error("Canlı fiyat yüklenemedi:",e);
+    document.getElementById("sonGuncelleme").textContent = "Bağlantı hatası";
+  }
 }
+
 try{
- const app=initializeApp(firebaseConfig);
- const db=getDatabase(app);
- onValue(ref(db,"karlar"),s=>{karlar=s.val()||{};canliYukle()},e=>{console.error("Firebase hatası:",e);canliYukle()});
-}catch(e){console.error(e);canliYukle()}
-canliYukle();
-setInterval(canliYukle,60000);
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  onValue(ref(db,"karlar"),s=>{
+    karlar = s.val() || {};
+    canliYukle();
+  },e=>{
+    console.error("Firebase fiyat bağlantısı:",e);
+    canliYukle();
+  });
+
+  const reklamRef = ref(db,"reklam/current");
+
+  window.kaliciReklamKaydet = async data => set(reklamRef,data);
+  window.kaliciReklamKaldir = async () => remove(reklamRef);
+
+  onValue(reklamRef,s=>{
+    const ad = s.val();
+    const img = document.getElementById("canliReklam");
+    const msg = document.getElementById("kayanYazi");
+
+    if(!ad || !ad.imageData || !ad.expiresAt || Date.now() >= Number(ad.expiresAt)){
+      img.removeAttribute("src");
+      img.style.display = "none";
+      msg.textContent = varsayilanYazi();
+
+      if(ad && ad.expiresAt && Date.now() >= Number(ad.expiresAt)){
+        remove(reklamRef).catch(console.error);
+      }
+      return;
+    }
+
+    img.src = ad.imageData;
+    img.style.display = "block";
+    msg.textContent = ad.message
+      ? "AKINLAR KUYUMCULUK • "+ad.message+" • TEL: 0531 734 68 80 • 0546 694 88 95"
+      : varsayilanYazi();
+
+    const remaining = Number(ad.expiresAt) - Date.now();
+    setTimeout(()=>{
+      if(Date.now() >= Number(ad.expiresAt)){
+        img.removeAttribute("src");
+        img.style.display = "none";
+        msg.textContent = varsayilanYazi();
+        remove(reklamRef).catch(console.error);
+      }
+    },Math.max(0,remaining));
+  },e=>{
+    console.error("Reklam Firebase bağlantısı:",e);
+  });
+
+  await canliYukle();
+  setInterval(canliYukle,60000);
+
+}catch(e){
+  console.error("Firebase başlatılamadı:",e);
+  canliYukle();
+  setInterval(canliYukle,60000);
+}
 </script>
 </body>
 </html>
