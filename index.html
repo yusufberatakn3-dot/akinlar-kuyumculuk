@@ -374,7 +374,16 @@ td[id$="Satis"]{color:#ff0000}
   .login-card{padding:20px 18px}
   .security-note{font-size:10px;margin-top:12px}
   #adSpace img{max-height:calc(100dvh - 600px)}
-}
+}/* TELEFON EKRANINA OTOMATİK UYUM */
+@media (max-height: 850px) {
+  .top { gap: 4px; margin-bottom: 6px; }
+  .box { padding: 5px 3px; font-size: 14px; }
+  .logo { font-size: clamp(22px, 6vw, 34px); margin: 6px 0 3px; }
+  .sub { margin-bottom: 5px; font-size: 11px; }
+  th { padding: 6px 3px; font-size: 17px; }
+  td { padding: 5px 6px; font-size: 15px; }
+  #adSpace img { max-height: 22dvh; width: 100%; object-fit: contain; }
+    }
 </style>
 </head>
 
