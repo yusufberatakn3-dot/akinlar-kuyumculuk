@@ -646,7 +646,7 @@ if(localStorage.getItem("akinlar_giris") === "1"){
 }
 
 /* REKLAMI GÖSTER — VERCEL API */
-let sonReklam = null;
+
 
 async function reklamYukle(){
   try{
@@ -700,7 +700,7 @@ setInterval(()=>{
     $("adSpace").replaceChildren();
   }
 }, 10000);
-
+const adRef = ref(db, "reklam/current");
 const adminMode =
   new URLSearchParams(location.search).get("yonetim") === "reklam";
 
