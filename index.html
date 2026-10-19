@@ -645,43 +645,64 @@ if(localStorage.getItem("akinlar_giris") === "1"){
   $("loginScreen").style.display = "none";
 }
 
-/* REKLAMI GÖSTER */
-const adRef = ref(db,"reklam/current");
-const adminMode =
-  new URLSearchParams(location.search).get("yonetim") === "reklam";
+/* REKLAMI GÖSTER — VERCEL API */
+let sonReklam = null;
 
-function reklamGoster(data){
-  const area = $("adSpace");
+async function reklamYukle(){
+  try{
+    const response = await fetch("/api/reklam?t=" + Date.now(), {
+      cache: "no-store"
+    });
 
-  if(
-    !data?.imageData ||
-    !data?.expiresAt ||
-    Date.now() >= Number(data.expiresAt)
-  ){
-    area.replaceChildren();
-    return;
+    if(!response.ok){
+      throw new Error("HTTP " + response.status);
+    }
+
+    const data = await response.json();
+    sonReklam = data;
+
+    const area = $("adSpace");
+
+    if(
+      !data?.imageData ||
+      !data?.expiresAt ||
+      Date.now() >= Number(data.expiresAt)
+    ){
+      area.replaceChildren();
+      return;
+    }
+
+    let img = area.querySelector("img");
+
+    if(!img){
+      img = document.createElement("img");
+      img.alt = "Akınlar Kuyumculuk reklamı";
+      area.replaceChildren(img);
+    }
+
+    if(img.src !== data.imageData){
+      img.src = data.imageData;
+    }
+
+  }catch(error){
+    console.error("Reklam yüklenemedi:", error);
   }
-
-  const img = document.createElement("img");
-  img.src = data.imageData;
-  img.alt = "Akınlar Kuyumculuk reklamı";
-  area.replaceChildren(img);
 }
 
-onValue(adRef,snap=>{
-  sonReklam = snap.val();
-  reklamGoster(sonReklam);
-},e=>{
-  console.error("Reklam okunamadı:",e);
-  if(adminMode) $("adminStatus").textContent =
-    "Reklam okunamadı: "+e.message;
-});
+reklamYukle();
+setInterval(reklamYukle, 10000);
 
 setInterval(()=>{
-  if(sonReklam?.expiresAt && Date.now() >= Number(sonReklam.expiresAt)){
-    reklamGoster(null);
+  if(
+    sonReklam?.expiresAt &&
+    Date.now() >= Number(sonReklam.expiresAt)
+  ){
+    $("adSpace").replaceChildren();
   }
-},10000);
+}, 10000);
+
+const adminMode =
+  new URLSearchParams(location.search).get("yonetim") === "reklam";
 
 /* REKLAM YÖNETİMİ GİRİŞİ */
 if(adminMode){
