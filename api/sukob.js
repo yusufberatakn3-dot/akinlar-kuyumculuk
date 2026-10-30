@@ -129,11 +129,22 @@ const url = "https://sukobfiyat.com/api/prices?cache=" + Date.now();
           bul(data, "EUR")
       };
 
-      if (!veriGecerliMi(sonuc)) {
-        throw new Error(
-          "SUKOB eksik fiyat gönderdi"
-        );
-      }
+if (!veriGecerliMi(sonuc)) {
+  const eksikler = gerekliTipler.filter(tip => {
+    const item = sonuc[tip];
+
+    return !item ||
+      item.buyPrice == null ||
+      item.sellPrice == null;
+  });
+
+  console.error("SUKOB EKSİK ÜRÜNLER:", eksikler);
+  console.error("SUKOB GELEN VERİ:", raw.slice(0, 2000));
+
+  throw new Error(
+    "Eksik ürünler: " + eksikler.join(", ")
+  );
+}
 
       return res.status(200).json({
         hasAltin: sonuc.HAS,
