@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const url = "https://sukobfiyat.com/api/prices";
+const url = "https://sukobfiyat.com/api/prices?cache=" + Date.now();
 
   const gerekliTipler = [
     "HAS",
