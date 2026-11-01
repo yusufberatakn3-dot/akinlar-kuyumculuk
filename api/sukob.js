@@ -22,96 +22,90 @@ export default async function handler(req, res) {
   const headers = {
     "User-Agent": "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/140.0.0.0 Mobile Safari/537.36",
     "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+    "Accept-Language": "tr-TR,tr;q=0.9",
     "Referer": anaUrl,
     "Origin": "https://sukobfiyat.com"
   };
 
-  function parseEt(raw) {
-    try {
-      const data = JSON.parse(raw);
-      if (Array.isArray(data)) return data;
-    } catch {}
-
-    const bas = raw.indexOf("[");
-    const son = raw.lastIndexOf("]");
-
-    if (bas !== -1 && son > bas) {
-      try {
-        const data = JSON.parse(raw.slice(bas, son + 1));
-        if (Array.isArray(data)) return data;
-      } catch {}
-    }
-
-    return null;
-  }
-
-  function bul(data, tip) {
-    return data.find(x => x && x.type === tip) || null;
-  }
-
-  function veriGecerliMi(sonuc) {
-    return gerekliTipler.every(tip => {
-      const item = sonuc[tip];
-      return item &&
-        item.buyPrice != null &&
-        item.sellPrice != null;
-    });
-  }
+  let sonHata = "Bilinmeyen hata";
+  let sonDurum = null;
+  let sonCevap = "";
 
   for (let deneme = 1; deneme <= 4; deneme++) {
     try {
-      // Önce ana sayfaya bağlan ve çerezleri al
       const anaSayfa = await fetch(anaUrl, {
-        method: "GET",
         headers,
+        signal: AbortSignal.timeout(10000),
         cache: "no-store"
       });
 
-      const setCookies = anaSayfa.headers.getSetCookie?.() || [];
-      const cookie = setCookies
+      const cookies =
+        anaSayfa.headers.getSetCookie?.() || [];
+
+      const cookie = cookies
         .map(c => c.split(";")[0])
         .join("; ");
 
-      // Ardından fiyat API'sine bağlan
       const response = await fetch(url, {
-        method: "GET",
         headers: {
           ...headers,
-          ...(cookie ? { "Cookie": cookie } : {})
+          ...(cookie ? { Cookie: cookie } : {})
         },
+        signal: AbortSignal.timeout(15000),
         cache: "no-store"
       });
 
-      const raw = await response.text();
+      sonDurum = response.status;
+      sonCevap = await response.text();
 
       if (!response.ok) {
         throw new Error("SUKOB HTTP " + response.status);
       }
 
-      const data = parseEt(raw);
+      let data;
 
-      if (!data) {
-        throw new Error("SUKOB JSON okunamadı: " + raw.slice(0, 300));
+      try {
+        data = JSON.parse(sonCevap);
+      } catch {
+        throw new Error("JSON okunamadı");
+      }
+
+      if (!Array.isArray(data)) {
+        throw new Error("Gelen veri dizi formatında değil");
+      }
+
+      if (
+        data.length === 1 &&
+        String(data[0]?.type || "").includes("Lutfen")
+      ) {
+        throw new Error(
+          "SUKOB yenileme uyarısı döndürüyor. Gerçek fiyat verisi yok."
+        );
       }
 
       const sonuc = {};
+
       for (const tip of gerekliTipler) {
-        sonuc[tip] = bul(data, tip);
+        sonuc[tip] =
+          data.find(x => x?.type === tip) || null;
       }
 
-      if (!veriGecerliMi(sonuc)) {
-        console.error("SUKOB GELEN VERİ:", raw.slice(0, 2000));
-        throw new Error("Eksik ürünler: " +
-          gerekliTipler.filter(tip => {
-            const item = sonuc[tip];
-            return !item ||
-              item.buyPrice == null ||
-              item.sellPrice == null;
-          }).join(", "));
+      const eksikler = gerekliTipler.filter(tip => {
+        const item = sonuc[tip];
+
+        return !item ||
+          item.buyPrice == null ||
+          item.sellPrice == null;
+      });
+
+      if (eksikler.length) {
+        throw new Error(
+          "Eksik ürünler: " + eksikler.join(", ")
+        );
       }
 
       return res.status(200).json({
+        success: true,
         hasAltin: sonuc.HAS,
         ayar22: sonuc["22 Ayar Bilezik"],
         yeniCeyrek: sonuc["Yeni Çeyrek"],
@@ -125,10 +119,9 @@ export default async function handler(req, res) {
       });
 
     } catch (e) {
-      console.error(
-        "SUKOB deneme " + deneme + " başarısız:",
-        e?.message || e
-      );
+      sonHata = e?.message || String(e);
+
+      console.error("SUKOB DENEME:", deneme, sonHata);
 
       if (deneme < 4) {
         await bekle(1500 * deneme);
@@ -137,7 +130,10 @@ export default async function handler(req, res) {
   }
 
   return res.status(502).json({
-    error: "SUKOB'a bağlanılamadı",
+    success: false,
+    error: sonHata,
+    upstreamStatus: sonDurum,
+    upstreamResponse: sonCevap.slice(0, 1000),
     retry: true
   });
 }
