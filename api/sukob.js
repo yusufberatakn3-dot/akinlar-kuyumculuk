@@ -1,7 +1,8 @@
 
 export default async function handler(req, res) {
   const anaUrl = "https://sukobfiyat.com/";
-  const url = "https://sukobfiyat.com/api/prices?cache=" + Date.now();
+  const url =
+    "https://sukobfiyat.com/api/mainprice/?cache=" + Date.now();
 
   const gerekliTipler = [
     "HAS",
@@ -20,7 +21,8 @@ export default async function handler(req, res) {
     new Promise(resolve => setTimeout(resolve, ms));
 
   const headers = {
-    "User-Agent": "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/140.0.0.0 Mobile Safari/537.36",
+    "User-Agent":
+      "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/140.0.0.0 Mobile Safari/537.36",
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "tr-TR,tr;q=0.9",
     "Referer": anaUrl,
@@ -33,6 +35,7 @@ export default async function handler(req, res) {
 
   for (let deneme = 1; deneme <= 4; deneme++) {
     try {
+      // Ana sayfadan çerezleri al
       const anaSayfa = await fetch(anaUrl, {
         headers,
         signal: AbortSignal.timeout(10000),
@@ -46,6 +49,7 @@ export default async function handler(req, res) {
         .map(c => c.split(";")[0])
         .join("; ");
 
+      // Yeni canlı fiyat API adresinden veriyi çek
       const response = await fetch(url, {
         headers: {
           ...headers,
@@ -67,17 +71,21 @@ export default async function handler(req, res) {
       try {
         data = JSON.parse(sonCevap);
       } catch {
-        throw new Error("JSON okunamadı");
+        throw new Error("Gelen cevap JSON formatında değil");
       }
 
       if (!Array.isArray(data)) {
         throw new Error("Gelen veri dizi formatında değil");
       }
 
-      if (
-        data.length === 1 &&
-        String(data[0]?.type || "").includes("Lutfen")
-      ) {
+      // Yenileme uyarısını ve boş fiyatları yakala
+      const uyari = data.find(item =>
+        String(item?.type || "")
+          .toLocaleLowerCase("tr-TR")
+          .includes("lütfen")
+      );
+
+      if (uyari) {
         throw new Error(
           "SUKOB yenileme uyarısı döndürüyor. Gerçek fiyat verisi yok."
         );
@@ -87,23 +95,30 @@ export default async function handler(req, res) {
 
       for (const tip of gerekliTipler) {
         sonuc[tip] =
-          data.find(x => x?.type === tip) || null;
+          data.find(item =>
+            String(item?.type || "").trim() === tip
+          ) || null;
       }
 
       const eksikler = gerekliTipler.filter(tip => {
         const item = sonuc[tip];
 
-        return !item ||
-          item.buyPrice == null ||
-          item.sellPrice == null;
+        return (
+          !item ||
+          !Number.isFinite(Number(item.buyPrice)) ||
+          !Number.isFinite(Number(item.sellPrice)) ||
+          Number(item.buyPrice) <= 0 ||
+          Number(item.sellPrice) <= 0
+        );
       });
 
       if (eksikler.length) {
         throw new Error(
-          "Eksik ürünler: " + eksikler.join(", ")
+          "Eksik veya geçersiz fiyatlar: " + eksikler.join(", ")
         );
       }
 
+      // Mevcut ekranın beklediği alan adlarını koru
       return res.status(200).json({
         success: true,
         hasAltin: sonuc.HAS,
@@ -121,7 +136,11 @@ export default async function handler(req, res) {
     } catch (e) {
       sonHata = e?.message || String(e);
 
-      console.error("SUKOB DENEME:", deneme, sonHata);
+      console.error(
+        "SUKOB DENEME:",
+        deneme,
+        sonHata
+      );
 
       if (deneme < 4) {
         await bekle(1500 * deneme);
@@ -133,7 +152,7 @@ export default async function handler(req, res) {
     success: false,
     error: sonHata,
     upstreamStatus: sonDurum,
-    upstreamResponse: sonCevap.slice(0, 1000),
+    upstreamResponse: sonCevap.slice(0, 1500),
     retry: true
   });
 }
