@@ -1,8 +1,12 @@
 
 export default async function handler(req, res) {
+  res.setHeader("Cache-Control", "no-store, max-age=0");
+
   const anaUrl = "https://sukobfiyat.com/";
-  const url =
-    "https://sukobfiyat.com/api/mainprice/?cache=" + Date.now();
+  const mobilUrl = "https://sukobfiyat.com/mobil.html";
+
+  // Şu an çalışan adres: son güvenli geri dönüş
+  const bilinenAdres = "/api/mainprice/";
 
   const gerekliTipler = [
     "HAS",
@@ -17,142 +21,276 @@ export default async function handler(req, res) {
     "EUR"
   ];
 
-  const bekle = ms =>
-    new Promise(resolve => setTimeout(resolve, ms));
-
   const headers = {
     "User-Agent":
       "Mozilla/5.0 (Linux; Android 15) AppleWebKit/537.36 Chrome/140.0.0.0 Mobile Safari/537.36",
     "Accept": "application/json, text/plain, */*",
     "Accept-Language": "tr-TR,tr;q=0.9",
-    "Referer": anaUrl,
+    "Referer": mobilUrl,
     "Origin": "https://sukobfiyat.com"
   };
 
   let sonHata = "Bilinmeyen hata";
   let sonDurum = null;
   let sonCevap = "";
+  let kullanilanAdres = "";
 
-  for (let deneme = 1; deneme <= 4; deneme++) {
+  // Sayfa ve JavaScript dosyalarından API adreslerini keşfet
+  async function adresleriKesfet() {
+    const bulunanlar = [];
+
+    function ekle(adres) {
+      if (!adres) return;
+
+      try {
+        const temiz = adres
+          .replace(/&amp;/g, "&")
+          .replace(/\\\//g, "/")
+          .trim();
+
+        const tam = new URL(temiz, mobilUrl);
+
+        // Yalnızca SUKOB'un kendi alan adını kabul et
+        if (tam.origin !== "https://sukobfiyat.com") return;
+
+        if (
+          !/\/api\//i.test(tam.pathname) ||
+          !/(price|fiyat)/i.test(tam.pathname)
+        ) return;
+
+        const yol = tam.pathname;
+
+        if (!bulunanlar.includes(yol)) {
+          bulunanlar.push(yol);
+        }
+      } catch {}
+    }
+
+    function tara(kod) {
+      if (!kod) return;
+
+      const desenler = [
+        /["'`](https?:\/\/sukobfiyat\.com\/api\/[^"'`\s]+)["'`]/gi,
+        /["'`]((?:\/|\.\/)?api\/[A-Za-z0-9_./-]*(?:price|fiyat)[A-Za-z0-9_./-]*\/?)["'`]/gi
+      ];
+
+      for (const desen of desenler) {
+        let eslesme;
+
+        while ((eslesme = desen.exec(kod)) !== null) {
+          ekle(eslesme[1]);
+        }
+      }
+    }
+
     try {
-      // Ana sayfadan çerezleri al
-      const anaSayfa = await fetch(anaUrl, {
+      const sayfa = await fetch(mobilUrl, {
         headers,
         signal: AbortSignal.timeout(10000),
         cache: "no-store"
       });
 
-      const cookies =
-        anaSayfa.headers.getSetCookie?.() || [];
+      if (!sayfa.ok) {
+        throw new Error("Mobil sayfa HTTP " + sayfa.status);
+      }
 
-      const cookie = cookies
-        .map(c => c.split(";")[0])
-        .join("; ");
+      const html = await sayfa.text();
+      tara(html);
 
-      // Yeni canlı fiyat API adresinden veriyi çek
-      const response = await fetch(url, {
-        headers: {
-          ...headers,
-          ...(cookie ? { Cookie: cookie } : {})
-        },
-        signal: AbortSignal.timeout(15000),
+      // Sayfadaki harici JavaScript dosyalarını da incele
+      const scriptDeseni =
+        /<script[^>]+src=["']([^"']+)["']/gi;
+
+      const scriptler = [];
+      let eslesme;
+
+      while ((eslesme = scriptDeseni.exec(html)) !== null) {
+        try {
+          const scriptUrl = new URL(eslesme[1], mobilUrl);
+
+          if (
+            scriptUrl.origin === "https://sukobfiyat.com" &&
+            !scriptler.includes(scriptUrl.href)
+          ) {
+            scriptler.push(scriptUrl.href);
+          }
+        } catch {}
+      }
+
+      // Çok fazla dosya indirmemek için ilk 12 dosya
+      for (const scriptUrl of scriptler.slice(0, 12)) {
+        try {
+          const cevap = await fetch(scriptUrl, {
+            headers,
+            signal: AbortSignal.timeout(7000),
+            cache: "no-store"
+          });
+
+          if (cevap.ok) {
+            tara(await cevap.text());
+          }
+        } catch {}
+      }
+
+    } catch (e) {
+      console.error("SUKOB kaynak keşfi:", e.message);
+    }
+
+    return bulunanlar;
+  }
+
+  // Ana sayfa çerezlerini al
+  async function cookieAl() {
+    try {
+      const cevap = await fetch(anaUrl, {
+        headers,
+        signal: AbortSignal.timeout(8000),
         cache: "no-store"
       });
 
-      sonDurum = response.status;
-      sonCevap = await response.text();
+      const cookies =
+        cevap.headers.getSetCookie?.() || [];
 
-      if (!response.ok) {
-        throw new Error("SUKOB HTTP " + response.status);
-      }
+      return cookies
+        .map(c => c.split(";")[0])
+        .join("; ");
+    } catch {
+      return "";
+    }
+  }
 
-      let data;
+  // Bir API adresini test et ve fiyatları doğrula
+  async function fiyatlariKontrolEt(yol, cookie) {
+    const tamUrl = new URL(yol, anaUrl);
+    tamUrl.searchParams.set("cache", Date.now().toString());
 
+    const response = await fetch(tamUrl.href, {
+      headers: {
+        ...headers,
+        ...(cookie ? { Cookie: cookie } : {})
+      },
+      signal: AbortSignal.timeout(15000),
+      cache: "no-store"
+    });
+
+    sonDurum = response.status;
+    sonCevap = await response.text();
+
+    if (!response.ok) {
+      throw new Error("SUKOB HTTP " + response.status);
+    }
+
+    let data;
+
+    try {
+      data = JSON.parse(sonCevap);
+    } catch {
+      throw new Error("JSON formatı okunamadı");
+    }
+
+    if (!Array.isArray(data)) {
+      throw new Error("Fiyat verisi dizi formatında değil");
+    }
+
+    const uyari = data.find(item =>
+      String(item?.type || "")
+        .toLocaleLowerCase("tr-TR")
+        .includes("lütfen")
+    );
+
+    if (uyari) {
+      throw new Error("SUKOB yenileme uyarısı döndürdü");
+    }
+
+    const sonuc = {};
+
+    for (const tip of gerekliTipler) {
+      sonuc[tip] = data.find(item =>
+        String(item?.type || "").trim() === tip
+      ) || null;
+    }
+
+    const eksikler = gerekliTipler.filter(tip => {
+      const item = sonuc[tip];
+
+      return (
+        !item ||
+        !Number.isFinite(Number(item.buyPrice)) ||
+        !Number.isFinite(Number(item.sellPrice)) ||
+        Number(item.buyPrice) <= 0 ||
+        Number(item.sellPrice) <= 0
+      );
+    });
+
+    if (eksikler.length) {
+      throw new Error(
+        "Eksik veya geçersiz fiyatlar: " +
+        eksikler.join(", ")
+      );
+    }
+
+    kullanilanAdres = tamUrl.pathname;
+
+    return {
+      success: true,
+      source: kullanilanAdres,
+      hasAltin: sonuc.HAS,
+      ayar22: sonuc["22 Ayar Bilezik"],
+      yeniCeyrek: sonuc["Yeni Çeyrek"],
+      yeniYarim: sonuc["Yeni Yarım"],
+      yeniTam: sonuc["Yeni Ziynet"],
+      eskiCeyrek: sonuc["Eski Çeyrek"],
+      eskiYarim: sonuc["Eski Yarım"],
+      eskiTam: sonuc["Eski Ziynet"],
+      dolar: sonuc.USD,
+      euro: sonuc.EUR
+    };
+  }
+
+  try {
+    const cookie = await cookieAl();
+
+    // Önce SUKOB sayfasından keşfedilen adresleri dene
+    const kesfedilenler = await adresleriKesfet();
+
+    // Şu an çalışan adresi de mutlaka yedekte tut
+    const adaylar = [
+      ...kesfedilenler,
+      bilinenAdres
+    ];
+
+    // Aynı adresi iki kez deneme
+    const benzersizAdaylar = [...new Set(adaylar)];
+
+    for (const aday of benzersizAdaylar) {
       try {
-        data = JSON.parse(sonCevap);
-      } catch {
-        throw new Error("Gelen cevap JSON formatında değil");
-      }
+        const sonuc = await fiyatlariKontrolEt(aday, cookie);
 
-      if (!Array.isArray(data)) {
-        throw new Error("Gelen veri dizi formatında değil");
-      }
+        console.log("SUKOB çalışan kaynak:", aday);
 
-      // Yenileme uyarısını ve boş fiyatları yakala
-      const uyari = data.find(item =>
-        String(item?.type || "")
-          .toLocaleLowerCase("tr-TR")
-          .includes("lütfen")
-      );
+        return res.status(200).json(sonuc);
 
-      if (uyari) {
-        throw new Error(
-          "SUKOB yenileme uyarısı döndürüyor. Gerçek fiyat verisi yok."
+      } catch (e) {
+        sonHata = e?.message || String(e);
+
+        console.error(
+          "SUKOB kaynak başarısız:",
+          aday,
+          sonHata
         );
-      }
-
-      const sonuc = {};
-
-      for (const tip of gerekliTipler) {
-        sonuc[tip] =
-          data.find(item =>
-            String(item?.type || "").trim() === tip
-          ) || null;
-      }
-
-      const eksikler = gerekliTipler.filter(tip => {
-        const item = sonuc[tip];
-
-        return (
-          !item ||
-          !Number.isFinite(Number(item.buyPrice)) ||
-          !Number.isFinite(Number(item.sellPrice)) ||
-          Number(item.buyPrice) <= 0 ||
-          Number(item.sellPrice) <= 0
-        );
-      });
-
-      if (eksikler.length) {
-        throw new Error(
-          "Eksik veya geçersiz fiyatlar: " + eksikler.join(", ")
-        );
-      }
-
-      // Mevcut ekranın beklediği alan adlarını koru
-      return res.status(200).json({
-        success: true,
-        hasAltin: sonuc.HAS,
-        ayar22: sonuc["22 Ayar Bilezik"],
-        yeniCeyrek: sonuc["Yeni Çeyrek"],
-        yeniYarim: sonuc["Yeni Yarım"],
-        yeniTam: sonuc["Yeni Ziynet"],
-        eskiCeyrek: sonuc["Eski Çeyrek"],
-        eskiYarim: sonuc["Eski Yarım"],
-        eskiTam: sonuc["Eski Ziynet"],
-        dolar: sonuc.USD,
-        euro: sonuc.EUR
-      });
-
-    } catch (e) {
-      sonHata = e?.message || String(e);
-
-      console.error(
-        "SUKOB DENEME:",
-        deneme,
-        sonHata
-      );
-
-      if (deneme < 4) {
-        await bekle(1500 * deneme);
       }
     }
+
+  } catch (e) {
+    sonHata = e?.message || String(e);
   }
 
   return res.status(502).json({
     success: false,
     error: sonHata,
     upstreamStatus: sonDurum,
-    upstreamResponse: sonCevap.slice(0, 1500),
-    retry: true
+    upstreamResponse: sonCevap.slice(0, 1200),
+    retry: true,
+    source: kullanilanAdres || null
   });
 }
